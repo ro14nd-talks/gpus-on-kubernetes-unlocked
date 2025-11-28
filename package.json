@@ -1,0 +1,23 @@
+{
+  "name": "gpus-on-kubernetes-unlocked",
+  "version": "1.0.0",
+  "description": "GPUs on Kubernetes Unlocked - Conference Presentation",
+  "private": true,
+  "scripts": {
+    "dev": "slidev slides.md",
+    "build": "slidev build slides.md",
+    "export": "slidev export slides.md",
+    "export-pdf": "slidev export slides.md --format pdf",
+    "export-pptx": "slidev export slides.md --format pptx",
+    "export-notes": "slidev export slides.md --with-clicks --format pdf"
+  },
+  "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
+    "@slidev/cli": "^0.48.0",
+    "@slidev/theme-seriph": "latest",
+    "canvas": "^3.2.0"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.57.0"
+  }
+}

@@ -1,0 +1,7 @@
+.claude/settings.local.json
+.DS_Store
+.claude/settings.local.json
+research
+node_modules
+old
+exports
