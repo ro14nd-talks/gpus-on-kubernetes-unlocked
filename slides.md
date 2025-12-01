@@ -17,17 +17,6 @@ info: |
 mdc: true
 ---
 
-# GPUs on Kubernetes Unlocked
-
-## Understanding GPU scheduling and resource management
-
-<div class="mt-16">
-
-### Roland Huß
-#### Distinguished Engineer, Red Hat
-
-</div>
-
 ---
 src: ./slides/02-book-introduction.md
 ---
@@ -219,51 +208,41 @@ src: ./slides/39-tensor-vs-pipeline-parallelism-trade-offs.md
 <!-- Slide 39: Tensor vs Pipeline Parallelism Trade-offs -->
 
 ---
-src: ./slides/40-single-node-fast-and-simple.md
+src: ./slides/40-five-strategies-maximize-gpu-utilization.md
 ---
-<!-- Slide 40: Single-Node: Fast and Simple -->
+<!-- Slide 40: Five Strategies Maximize GPU Utilization -->
 
 ---
-src: ./slides/41-multi-node-topology-and-bandwidth-hierarchy.md
+src: ./slides/41-2025-trends-shift-gpus-to-shared-substrate.md
 ---
-<!-- Slide 41: Multi-Node Topology and Bandwidth Hierarchy -->
+<!-- Slide 41: 2025 Trends Shift GPUs to Shared Substrate -->
 
 ---
-src: ./slides/42-five-strategies-maximize-gpu-utilization.md
+src: ./slides/42-backup-three-layers-unlock-gpu-scheduling.md
 ---
-<!-- Slide 42: Five Strategies Maximize GPU Utilization -->
+<!-- Slide 42: Three Layers Unlock GPU Scheduling -->
 
 ---
-src: ./slides/43-2025-trends-shift-gpus-to-shared-substrate.md
+src: ./slides/43-questions.md
 ---
-<!-- Slide 43: 2025 Trends Shift GPUs to Shared Substrate -->
+<!-- Slide 43: Questions? -->
 
 ---
-src: ./slides/44-backup-three-layers-unlock-gpu-scheduling.md
+src: ./slides/44-backup-section.md
 ---
-<!-- Slide 44: Three Layers Unlock GPU Scheduling -->
+<!-- Slide 44: Backup Slides -->
 
 ---
-src: ./slides/45-questions.md
+src: ./slides/45-backup-nccl-and-rdma-enable-fast-gpu-communication.md
 ---
-<!-- Slide 45: Questions? -->
+<!-- Slide 45: NCCL and RDMA Enable Fast GPU Communication -->
 
 ---
-src: ./slides/46-backup-section.md
+src: ./slides/46-backup-debugging-gpu-scheduling-issues.md
 ---
-<!-- Slide 46: Backup Slides -->
+<!-- Slide 46: Debugging GPU Scheduling Issues -->
 
 ---
-src: ./slides/47-backup-nccl-and-rdma-enable-fast-gpu-communication.md
+src: ./slides/47-backup-multi-instance-gpu-configuration-strategies.md
 ---
-<!-- Slide 47: NCCL and RDMA Enable Fast GPU Communication -->
-
----
-src: ./slides/48-backup-debugging-gpu-scheduling-issues.md
----
-<!-- Slide 48: Debugging GPU Scheduling Issues -->
-
----
-src: ./slides/49-backup-multi-instance-gpu-configuration-strategies.md
----
-<!-- Slide 49: Multi-Instance GPU Configuration Strategies -->
+<!-- Slide 47: Multi-Instance GPU Configuration Strategies -->

@@ -4,49 +4,110 @@ layout: default
 
 # Pipeline Parallelism Splits Layers Vertically
 
-<div class="grid grid-cols-2 gap-8">
+<div class="grid grid-cols-20 gap-8">
 
-<div>
+<div class="col-span-11">
 
-**Across multiple nodes:**
-- Network interconnect (12.5 GB/s)
-- Different layers per GPU
-- Sequential processing
+<div class="grid grid-cols-1 gap-6">
 
-**Requirements:**
-- Ray.io, StatefulSets, gang scheduling
-- NCCL configuration
-- Micro-batching to hide latency
+<div class="px-4 pt-3 pb-3 bg-orange-100 dark:bg-orange-900 rounded">
 
-**Trade-off:** Communication overhead
+<div class="mb-2">
 
-**Benefit:** Scales beyond single server
+### How it works
 
 </div>
 
-<div>
+- Model layers distributed across multiple nodes
+- Network: 12-25 GB/s (24-50× slower than NVLink)
+- Sequential processing with micro-batching
 
-<img src="/images/pipeline-parallelism-multi-node.svg" alt="Pipeline Parallelism Multi-Node" style="width: 100%; height: auto;" />
+</div>
+
+<div class="px-4 pt-3 pb-3 bg-orange-100 dark:bg-orange-900 rounded">
+
+<div class="mb-2">
+
+### Trade-offs
+
+</div>
+
+**Advantages:**
+- Unlimited scale - beyond single server
+- Huge models - 100B+ parameters
+
+**Limitations:**
+- More complex - Ray.io, gang scheduling needed
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-span-9">
+
+<div class="grid grid-cols-1 gap-6">
+
+<div class="flex items-center justify-center">
+  <img src="/images/pipeline-parallelism-multi-node.svg" alt="Pipeline Parallelism Architecture" class="max-w-full max-h-56 object-contain" />
+</div>
+
+<div class="flex items-center justify-center mt-12">
+  <img src="/images/pipeline-parallelism.svg" alt="Pipeline Parallelism Concept" class="max-w-full max-h-48 object-contain" />
+</div>
+
+</div>
 
 </div>
 
 </div>
 
 <!--
-Pipeline parallelism stretches model across nodes when no box is big enough.
+Pipeline parallelism: Distributes model layers across multiple nodes when the model is too large for a single server.
 
-Split vertically by layers: GPU 1 layers 1-10, GPU 2 layers 11-20, etc.
+How it works:
+- Different layers run on different GPUs/nodes (vertical split across layers)
+- Layer 1-10 on Node 1, Layer 11-20 on Node 2, etc.
+- Requests flow sequentially through the pipeline: Node 1 → Node 2 → Node 3
+- After processing each layer group, intermediate results sent to next node
+- Think: "Assembly line" - each station handles a different stage
 
-Request flows sequentially through pipeline. Micro-batching hides latency.
+Architecture:
+- Multiple nodes connected via network (Ethernet or InfiniBand)
+- 100 Gbit Ethernet = 12.5 GB/s bandwidth
+- InfiniBand HDR = 25 GB/s (2× faster than Ethernet)
+- Still 24-50× slower than NVLink (600 GB/s within server vs 12-25 GB/s between servers)
+- PCIe 4.0 x16: 32 GB/s for CPU-GPU communication within node
 
-Communication between stages via network (InfiniBand or Ethernet).
+Why it works despite slower network:
+- Communication happens between stages (lower frequency than tensor parallelism)
+- Micro-batching hides latency: while Node 2 processes batch N, Node 1 already starts batch N+1
+- Overlapping computation and communication maximizes throughput
+- Tolerates slower interconnects because communication is less frequent
 
-Network: 100 Gbit Ethernet = 12.5 GB/s vs 600 GB/s NVLink - 50× slower
-Why it works: Lower communication frequency (between stages, not every layer)
+Kubernetes deployment:
+- Ray.io provides distributed coordination across nodes
+- StatefulSets ensure stable network identities for inter-node communication
+- Gang scheduling ensures all pods start together (using Kueue or Volcano)
+- NCCL over RDMA for efficient GPU-to-GPU communication across network
+- InfiniBand recommended for production (2× bandwidth vs Ethernet)
 
-Use case: GPT-3 175B params - exceeds single 8-GPU server, needs 16+ GPUs across nodes.
+Real-world example:
+- GPT-3 175B parameters exceeds single 8-GPU server capacity (~320GB needed, max 320GB per server)
+- Solution: Distribute across 16+ GPUs on multiple nodes
+- Each node holds consecutive layers of the model
+- Models too large for single-server capacity require this approach
 
-Orchestration: Ray.io for coordination, gang scheduling ensures all pods start together.
+Design principle:
+- Use when model exceeds single-server GPU capacity
+- Ideal for models requiring 16+ GPUs (beyond typical 8-GPU server limit)
+
+Limitations:
+- Multi-node coordination increases operational complexity
+- Higher latency than tensor parallelism due to sequential processing
+- Requires specialized scheduling (gang scheduling) and orchestration tools
+- Network bandwidth becomes bottleneck compared to single-server NVLink
 
 Timing: 120 seconds
 -->
