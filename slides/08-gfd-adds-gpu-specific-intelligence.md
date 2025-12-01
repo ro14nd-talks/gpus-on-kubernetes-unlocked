@@ -45,7 +45,7 @@ nvidia.com/mig.capable: "true"
 
 </div>
 
-<div class="mt-4 p-4 bg-blue-100 dark:bg-blue-900 rounded text-center">
+<div class="mt-4 p-4 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
 GFD is part of the **NVIDIA GPU Operator**
 

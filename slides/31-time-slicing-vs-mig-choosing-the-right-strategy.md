@@ -2,37 +2,44 @@
 layout: default
 ---
 
-# Time-Slicing vs MIG: Choosing the Right Strategy
+# Choose Time-Slicing for Flexibility, MIG for Isolation
 
 <div class="overflow-auto">
 
-| Aspect | Time-Slicing | MIG |
+|  | **Time-Slicing** | **MIG** |
 |--------|--------------|-----|
-| **Isolation** | None (shared memory) | Strong (dedicated memory) |
-| **Fault Tolerance** | One crash affects all | Isolated fault domains |
-| **Resource Guarantee** | Compute time only | Memory + compute |
-| **Flexibility** | Can burst to full GPU | Fixed partition |
-| **Hardware Support** | All NVIDIA GPUs | Ampere+ only (A100, H100) |
-| **Configuration** | Replica count | Fixed profiles |
-| **Overhead** | Minimal | Some (partition mgmt) |
+| **Isolation & Faults** | Shared, cascade failures | Dedicated, isolated |
+| **Resource Guarantees** | Time-sharing, variable | Memory + compute, predictable |
+| **Flexibility** | Burst to full GPU | Fixed partition |
+| **Complexity** | Simple replica count | Fixed profiles, partition mgmt |
+| **Hardware Support** | All NVIDIA GPUs | Ampere+ only |
 | **Use Case** | Dev, bursty workloads | Production, multi-tenant |
-| **Performance** | Variable (contention) | Predictable |
+
+</div>
+
+<div class="mt-4 px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+
+Trade isolation for flexibility - choose based on your workload requirements
 
 </div>
 
 <!--
-Quick comparison summary:
+Streamlined comparison - 6 key decision factors:
 
-Time-slicing: Flexible, but no isolation
-MIG: Isolated, but rigid
+1. Isolation & Faults: MIG provides true hardware isolation, time-slicing shares everything
+2. Resource Guarantees: MIG guarantees memory+compute, time-slicing only guarantees time slices
+3. Flexibility: Time-slicing can burst, MIG is locked to partition size
+4. Complexity: Time-slicing is simple (just replica count), MIG requires understanding fixed profiles
+5. Hardware Support: Time-slicing works on all GPUs, MIG needs Ampere+
+6. Use Case: Dev/bursty → time-slicing, Production/multi-tenant → MIG
 
-Your choice depends on requirements:
-- Need isolation? MIG
-- Need flexibility? Time-slicing
-- Have Ampere+ GPUs? MIG is an option
-- Have older GPUs? Time-slicing only
-- Dev environment? Time-slicing
-- Production multi-tenant? MIG
+Decision framework:
+- Need isolation? → MIG
+- Need flexibility? → Time-slicing
+- Have Ampere+ GPUs? → MIG available
+- Have older GPUs (T4, V100)? → Time-slicing only option
+- Dev environment? → Time-slicing
+- Production multi-tenant? → MIG
 
 Timing: 90 seconds
 -->

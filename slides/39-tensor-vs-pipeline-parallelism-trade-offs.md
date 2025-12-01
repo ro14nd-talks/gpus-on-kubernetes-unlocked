@@ -1,10 +1,12 @@
 ---
-layout: image-right
-image: /images/ch05-gpu-model-parallelism.png
-backgroundSize: contain
+layout: default
 ---
 
 # Tensor vs Pipeline Parallelism Trade-offs
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
 
 | **Aspect** | **Tensor** | **Pipeline** |
 |------------|------------|--------------|
@@ -16,6 +18,22 @@ backgroundSize: contain
 | **Degree** | 2-8 GPUs | 2-16+ GPUs |
 
 **Hybrid:** Tensor within nodes + Pipeline across nodes
+
+</div>
+
+<div class="grid grid-cols-1 gap-4">
+
+<div>
+<img src="/images/pipeline-parallelism.svg" alt="Pipeline Parallelism" style="width: 100%; height: auto;" />
+</div>
+
+<div>
+<img src="/images/tensor-parallelism.svg" alt="Tensor Parallelism" style="width: 100%; height: auto;" />
+</div>
+
+</div>
+
+</div>
 
 <!--
 Quick comparison:

@@ -10,7 +10,7 @@ Generative AI on Kubernetes
 </div>
 
 <div class="text-xl">
-Roland Huß · Danielle Zonca
+Roland Huß · Daniele Zonca
 </div>
 
 <div class="text-lg opacity-75">

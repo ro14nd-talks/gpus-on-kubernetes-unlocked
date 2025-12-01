@@ -2,70 +2,26 @@
 layout: default
 ---
 
-# Two Motives for Multi-GPU
+# Two Dimensions Define Three GPU Strategies
 
-<div class="grid grid-cols-2 gap-8">
-
-<div>
-
-## 1. Throughput Scaling
-
-<div class="text-sm mt-2">(Data Parallelism)</div>
-
-```mermaid
-graph TD
-    A[Load Balancer] --> B[Replica 1<br/>GPU 0]
-    A --> C[Replica 2<br/>GPU 1]
-    A --> D[Replica 3<br/>GPU 2]
-    A --> E[Replica 4<br/>GPU 3]
-
-    style A fill:#FF9800
-    style B fill:#4CAF50
-    style C fill:#4CAF50
-    style D fill:#4CAF50
-    style E fill:#4CAF50
-```
-
-**Goal:** Serve more concurrent requests
-**Method:** Multiple independent replicas
-**Benefit:** Higher QPS
-
-</div>
-
-<div>
-
-## 2. Model Parallelism
-
-<div class="text-sm mt-2">(Model too large for 1 GPU)</div>
-
-```mermaid
-graph LR
-    A[Request] --> B[GPU 0<br/>Layers 1-10]
-    B --> C[GPU 1<br/>Layers 11-20]
-    C --> D[GPU 2<br/>Layers 21-30]
-    D --> E[Response]
-
-    style B fill:#2196F3
-    style C fill:#2196F3
-    style D fill:#2196F3
-```
-
-**Goal:** Fit model exceeding 1 GPU
-**Method:** Split model across GPUs
-**Benefit:** Serve larger models
-
-</div>
-
+<div class="flex justify-center mt-12 w-full">
+  <img src="/images/gpu-parallelism.svg" class="w-full max-w-3xl" alt="Multi-GPU Parallelism Taxonomy" />
 </div>
 
 <!--
-Two completely different reasons to use multiple GPUs:
+This slide introduces the taxonomy of multi-GPU parallelism strategies. There are two key dimensions:
 
-1. Throughput (left): Model fits on 1 GPU, want to handle more requests/sec. Solution: N copies on N GPUs, each handles different requests. Horizontal scaling.
+1. Strategy: Do we replicate the entire model (Data Parallelism) or split it (Model Parallelism)?
+   - Data Parallelism: Multiple complete copies for throughput scaling
+   - Model Parallelism: Split a single model when it's too large for one GPU
 
-2. Model Parallelism (right): Model too big for 1 GPU. Need multiple GPUs to hold one instance. Solution: Split model across GPUs, each processes part of each request. Vertical scaling.
+2. Deployment: Single-node vs multi-node determines the communication patterns
+   - Tensor Parallelism: Single-node, layer-level horizontal splits, NVLink
+   - Pipeline Parallelism: Multi-node capable, layer-level vertical splits, Ethernet
 
-Fundamentally different patterns with different trade-offs. Let's explore each.
+This is an intro slide. Next slides cover:
+- Slide 36: Data Parallelism in detail
+- Slides 38-40: Model Parallelism strategies (Tensor and Pipeline)
 
-Timing: 120 seconds
+Timing: 90 seconds
 -->

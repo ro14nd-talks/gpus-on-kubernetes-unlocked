@@ -10,7 +10,7 @@ layout: default
 
 <div class="mb-3">
 
-### ✅ What We Have So Far
+### 🌟 What We Have So Far
 
 </div>
 
@@ -20,11 +20,11 @@ layout: default
 
 </div>
 
-<div v-click="2" class="mt-6 px-4 pt-3 pb-3 bg-orange-100 dark:bg-orange-900 rounded">
+<div v-click="2" class="mt-6 px-4 pt-3 pb-3 bg-red-100 dark:bg-red-900 rounded">
 
 <div class="mb-3">
 
-### ❌ What's Still Missing for Production
+### ⛔ What's Still Missing for Production
 
 </div>
 
@@ -37,7 +37,7 @@ layout: default
 
 </div>
 
-<div v-click="3" class="mt-12 py-2 px-3 bg-purple-100 dark:bg-purple-900 rounded text-center">
+<div v-click="3" class="mt-12 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
 Manual SSH into nodes doesn't scale—we need declarative automation
 

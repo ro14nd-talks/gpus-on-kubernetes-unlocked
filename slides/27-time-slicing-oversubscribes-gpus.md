@@ -1,69 +1,71 @@
----
-layout: two-cols
----
-
 # Time-Slicing Oversubscribes GPUs
 
-**Concept:**
+<div class="grid grid-cols-2 gap-8 mt-3">
+
+<div>
+
+<div class="px-3 py-2 bg-blue-100 dark:bg-blue-900 rounded">
+
 - 1 physical GPU → N virtual GPUs
-- Like CPU time-sharing
-- Processes interleave on GPU
+- Processes interleave (like CPU time-sharing)
 - No memory isolation
+- Node advertises N GPUs to scheduler
 
-<div class="mt-4">
+</div>
 
-**Configuration:**
+<div class="mt-2">
 
-```yaml
+```yaml {lines:false}
+# ConfigMap
 sharing:
   timeslicing:
-    renameByDefault: true
     resources:
     - name: nvidia.com/gpu
-      replicas: 8
+      replicas: 4  # 1 physical → 4 virtual
+---
+# Referenced in ClusterPolicy
+devicePlugin:
+  config:
+    name: time-slicing-config
 ```
 
 </div>
 
-::right::
+</div>
 
-<div class="mt-8">
+<div class="mt-6">
 
-```mermaid
-graph TB
-    A[Physical GPU]
-    A -->|Time Slice 1| B[Pod A]
-    A -->|Time Slice 2| C[Pod B]
-    A -->|Time Slice 3| D[Pod C]
-    A -->|Time Slice 4| E[Pod D]
-
-    style A fill:#2196F3
-    style B fill:#4CAF50
-    style C fill:#4CAF50
-    style D fill:#4CAF50
-    style E fill:#4CAF50
-```
-
-<div class="mt-4 text-sm">
-
-Node shows: `nvidia.com/gpu: 8` (instead of 1)
+<img src="/images/time-slicing-funnel.svg" alt="Time-slicing funnel diagram" class="w-full" />
 
 </div>
+
+</div>
+
+<div class="mt-3 px-3 py-1 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+
+Trade memory isolation for higher density — use for dev/test and bursty workloads
 
 </div>
 
 <!--
 Time-slicing is oversubscription.
 
-1 physical GPU advertised as 8 schedulable resources. Kubernetes thinks 8 GPUs exist.
+1 physical GPU advertised as N schedulable resources. Kubernetes thinks N GPUs exist.
 
 Pods time-share actual GPU - similar to CPU scheduler interleaving processes.
 
-ConfigMap sets replica count. replicas: 8 means 1 physical becomes 8 virtual.
-
-Can rename resource to nvidia.com/gpu.shared to distinguish from exclusive.
+ConfigMap defines sharing policy, referenced in ClusterPolicy devicePlugin config.
 
 Key: Compute time-sharing, NOT memory isolation. All pods share same VRAM.
 
-Timing: 120 seconds
+Why dev/test and bursty workloads:
+- Dev workloads are intermittent (short experiments, tests, debugging) with lots of idle time
+- Bursty workloads can use full GPU when available (unlike MIG's hard partitions)
+- Cost efficiency over isolation (share 1 GPU among 4-8 developers vs buying each a dedicated GPU)
+- No strict SLAs needed - acceptable performance variability
+- NOT for production: no memory isolation = pods can interfere, unpredictable performance
+
+Production alternative: MIG provides hardware isolation and guaranteed resources.
+
+Timing: 90 seconds
 -->

@@ -1,10 +1,12 @@
 ---
-layout: image-right
-image: /images/ch05-gpu-single-node.png
-backgroundSize: contain
+layout: default
 ---
 
 # Tensor Parallelism Splits Layers Horizontally
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
 
 **Inside one server:**
 - NVLink interconnect (~600 GB/s)
@@ -19,6 +21,16 @@ resources:
 ```
 
 **Use case:** Large models, low-latency critical
+
+</div>
+
+<div>
+
+<img src="/images/tensor-parallelism-single-node.svg" alt="Tensor Parallelism Single Node" style="width: 100%; height: auto;" />
+
+</div>
+
+</div>
 
 <!--
 Tensor parallelism is tight cooperation - multiple GPUs on same request simultaneously.

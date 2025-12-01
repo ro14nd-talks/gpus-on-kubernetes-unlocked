@@ -16,17 +16,19 @@ layout: default
 
 <table style="border: none; width: 100%; line-height: 1.3;">
 <colgroup>
-<col style="width: 5%;">
-<col style="width: 40%;">
-<col style="width: 55%;">
+<col style="width: 5%;" />
+<col style="width: 40%;" />
+<col style="width: 55%;" />
 </colgroup>
+<tbody>
 <tr style="border: none;"><td style="border: none; padding: 2px 4px; vertical-align: top;">✅</td><td style="border: none; padding: 2px 4px; vertical-align: top;"><strong>Device Plugin</strong></td><td style="border: none; padding: 2px 4px; vertical-align: top;"><em>Exposes nvidia.com/gpu resources</em></td></tr>
 <tr style="border: none;"><td style="border: none; padding: 2px 4px; vertical-align: top;">✅</td><td style="border: none; padding: 2px 4px; vertical-align: top;"><strong>GPU Feature Discovery</strong></td><td style="border: none; padding: 2px 4px; vertical-align: top;"><em>Adds detailed GPU labels</em></td></tr>
 <tr style="border: none;"><td style="border: none; padding: 2px 4px; vertical-align: top;">⬜</td><td style="border: none; padding: 2px 4px; vertical-align: top;"><strong>MIG Manager</strong></td><td style="border: none; padding: 2px 4px; vertical-align: top;"><em>Configures GPU partitioning</em></td></tr>
-<tr style="border: none;"><td colspan="3" style="border: none; padding: 4px 0;"><hr style="border: none; border-top: 1px solid rgba(0,0,0,0.2); margin: 0;"></td></tr>
+<tr style="border: none;"><td colspan="3" style="border: none; padding: 4px 0;"><hr style="border: none; border-top: 1px solid rgba(0,0,0,0.2); margin: 0;" /></td></tr>
 <tr style="border: none;"><td style="border: none; padding: 2px 4px; vertical-align: top;">⬜</td><td style="border: none; padding: 2px 4px; vertical-align: top;"><strong>Driver Container</strong></td><td style="border: none; padding: 2px 4px; vertical-align: top;"><em>Installs NVIDIA drivers on host nodes</em></td></tr>
 <tr style="border: none;"><td style="border: none; padding: 2px 4px; vertical-align: top;">⬜</td><td style="border: none; padding: 2px 4px; vertical-align: top;"><strong>Container Toolkit</strong></td><td style="border: none; padding: 2px 4px; vertical-align: top;"><em>Configures runtime to expose GPUs to containers</em></td></tr>
 <tr style="border: none;"><td style="border: none; padding: 2px 4px; vertical-align: top;">⬜</td><td style="border: none; padding: 2px 4px; vertical-align: top;"><strong>DCGM Exporter</strong></td><td style="border: none; padding: 2px 4px; vertical-align: top;"><em>Prometheus metrics for monitoring</em></td></tr>
+</tbody>
 </table>
 
 </div>
@@ -57,7 +59,7 @@ spec:
 
 </div>
 
-<div class="mt-6 px-3 pt-2 pb-2 bg-blue-100 dark:bg-blue-900 rounded text-center" v-click>
+<div class="mt-6 px-3 pt-2 pb-2 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 **Change one YAML → operator reconfigures entire cluster**
 

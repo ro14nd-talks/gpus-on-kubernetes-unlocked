@@ -10,7 +10,7 @@ layout: default
 
 <div class="mb-2">
 
-### ✅ Benefits
+### 🌟 Benefits
 
 </div>
 
@@ -21,11 +21,11 @@ layout: default
 
 </div>
 
-<div v-click="2" class="px-4 pt-3 pb-3 bg-orange-100 dark:bg-orange-900 rounded">
+<div v-click="2" class="px-4 pt-3 pb-3 bg-red-100 dark:bg-red-900 rounded">
 
 <div class="mb-2">
 
-### ❌ Current Limitations
+### ⛔ Current Limitations
 
 </div>
 
@@ -38,7 +38,7 @@ layout: default
 
 </div>
 
-<div v-click="3" class="mt-12 py-2 px-3 bg-purple-100 dark:bg-purple-900 rounded text-center">
+<div v-click="3" class="mt-12 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
 Wait for production, but start learning now
 

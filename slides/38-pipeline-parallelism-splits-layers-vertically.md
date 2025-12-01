@@ -1,10 +1,12 @@
 ---
-layout: image-right
-image: /images/ch05-gpu-multiple-nodes.png
-backgroundSize: contain
+layout: default
 ---
 
 # Pipeline Parallelism Splits Layers Vertically
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
 
 **Across multiple nodes:**
 - Network interconnect (12.5 GB/s)
@@ -19,6 +21,16 @@ backgroundSize: contain
 **Trade-off:** Communication overhead
 
 **Benefit:** Scales beyond single server
+
+</div>
+
+<div>
+
+<img src="/images/pipeline-parallelism-multi-node.svg" alt="Pipeline Parallelism Multi-Node" style="width: 100%; height: auto;" />
+
+</div>
+
+</div>
 
 <!--
 Pipeline parallelism stretches model across nodes when no box is big enough.

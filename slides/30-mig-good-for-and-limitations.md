@@ -2,66 +2,77 @@
 layout: default
 ---
 
-# MIG: Good For and Limitations
+# MIG Provides Isolation at Cost of Flexibility
 
-<div class="grid grid-cols-2 gap-8">
+<div class="grid grid-cols-2 gap-12 mt-6">
 
-<div>
+<div class="px-3 py-2 bg-green-100 dark:bg-green-900 rounded">
 
-## ✅ Good For
+## 🌟 Good For
 
-- Multi-tenancy
-- Production QoS requirements
-- Multiple smaller models
-- Guaranteed resources
-- Fault isolation critical
-- Newer hardware (A100, H100)
+<div class="mt-3">
 
-**Example:** 7 separate model services, each needs dedicated 5GB
+- Production multi-tenancy with isolation
+- Multiple smaller models (7B params)
+- Guaranteed resources required
+- Ampere+ hardware (A100, H100)
 
 </div>
 
-<div>
+</div>
 
-## ❌ Limitations
+<div class="px-3 py-2 bg-red-100 dark:bg-red-900 rounded">
 
-- **Fixed profiles**
-  Can't make arbitrary sizes
+## ⛔ Limitations
 
-- **No bursting**
-  Can't borrow unused capacity
+<div class="mt-3">
 
-- **Granularity**
-  Smallest: 5GB (on A100)
-
-- **Hardware requirement**
-  Only Ampere+ GPUs
-
-- **Complexity**
-  More moving parts
-
-**Not ideal:** Very large models (>40GB)
+- Fixed partition sizes (min 5GB)
+- No bursting beyond partition
+- Ampere+ GPUs only
+- More operational complexity
 
 </div>
+
+</div>
+
+</div>
+
+<div class="mt-4 px-4 py-2 bg-violet-100 dark:bg-violet-900 rounded">
+
+<ul style="list-style: none; padding-left: 0;">
+<li>⭐ Multi-tenant: 3 customers get 10GB slices - one crashes, others unaffected</li>
+<li>⭐ 7 models (5GB each) share A100 with complete isolation</li>
+<li>⛔ Dev needs 8GB, could burst to 15GB - locked at 10GB</li>
+<li>⛔ 70B model (35GB) won't fit 20GB partition - needs full GPU</li>
+</ul>
+
+</div>
+
+<div class="mt-4 px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+
+For flexible sharing → use time-slicing instead
 
 </div>
 
 <!--
-MIG shines for multi-tenant production:
+MIG provides true hardware isolation - each partition gets dedicated memory and compute.
 
-Good: Multiple teams' workloads need isolation. Each team gets guaranteed slice, can't interfere.
+Good For - Real isolation value:
+- Multi-tenant SaaS: Each customer gets guaranteed GPU slice, complete fault isolation
+- Multiple inference endpoints: 7 different models (5GB each) on one A100, no memory stealing
+- Production QoS: Guaranteed resources, predictable performance, one crash doesn't kill others
+- Fixed workloads: Know exactly what each partition needs, benefit from dedicated resources
 
-Good: Many smaller models (7B params ~5-8GB). Give each its own MIG instance.
+Limitations - Where it hurts:
+- Fixed profiles: Can't get 15GB partition - stuck with 10GB or 20GB (fixed: 1g.5gb, 2g.10gb, 3g.20gb, 7g.40gb)
+- No bursting: Dev workload might need 8GB normally but could use 15GB - MIG hard-limits to partition
+- Large models: 70B model in 4-bit needs 35GB, doesn't fit 20GB partition - must use whole GPU anyway
+- Ampere+ only: A100, H100, B100/B200 - older GPUs (T4, V100) can't use MIG
 
-Bad: One giant model needing 80GB. MIG partitions it - would need whole GPU anyway.
+Real-world pattern: MIG for strict multi-tenancy/production, time-slicing for dev/bursty workloads.
 
-Bad: Want 15GB partition. Stuck with fixed profiles - 10GB or 20GB, nothing between.
-
-Bad: Workloads that could burst. Time-slicing lets you use idle capacity. MIG hard-limits to partition.
-
-MIG is isolation and predictability at cost of flexibility.
-
-Can combine them!
+Advanced: Can combine MIG + time-slicing (time-slice each MIG instance) for maximum density.
 
 Timing: 120 seconds
 -->

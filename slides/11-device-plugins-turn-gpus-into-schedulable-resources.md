@@ -59,7 +59,7 @@ end note
 
 </div>
 
-<div v-click class="mt-4 p-4 bg-blue-100 dark:bg-blue-900 rounded text-center">
+<div v-click class="mt-4 p-4 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
 **The magic moment:** GPUs go from invisible to schedulable
 

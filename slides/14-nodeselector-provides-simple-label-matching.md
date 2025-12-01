@@ -22,7 +22,7 @@ spec:
 
 <div class="mb-2">
 
-### ✅ Strengths
+### 🌟 Strengths
 
 </div>
 
@@ -36,7 +36,7 @@ spec:
 
 <div class="mb-2">
 
-### ❌ Limitations
+### ⛔ Limitations
 
 </div>
 
@@ -48,7 +48,7 @@ spec:
 
 </div>
 
-<div v-click="2" class="mt-4 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center">
+<div v-click="2" class="mt-4 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
 **Best For:** Workloads tested on specific GPU model
 

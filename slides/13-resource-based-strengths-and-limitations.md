@@ -10,7 +10,7 @@ layout: default
 
 <div class="mb-2">
 
-### ✅ Strengths
+### 🌟 Strengths
 
 </div>
 
@@ -26,7 +26,7 @@ layout: default
 
 <div class="mb-2">
 
-### ❌ Limitations
+### ⛔ Limitations
 
 </div>
 
@@ -40,7 +40,7 @@ layout: default
 
 </div>
 
-<div v-click="3" class="mt-4 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center">
+<div v-click="3" class="mt-4 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
 **Best For:** Dev/test environments with single GPU type
 

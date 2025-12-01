@@ -1,8 +1,6 @@
-# GPU Sharing Maximizes Utilization
+# NVIDIA GPU Sharing Maximizes Utilization
 
-<div class="grid grid-cols-2 gap-8 mt-8">
-
-<div class="p-4 bg-orange-100 dark:bg-orange-900 rounded">
+<div class="mt-3 px-3 py-1 bg-red-100 dark:bg-red-900 rounded">
 
 **The Challenge:**
 - GPUs expensive, often <30% utilized
@@ -11,25 +9,35 @@
 
 </div>
 
-<div class="p-4 bg-blue-100 dark:bg-blue-900 rounded">
+<div class="grid grid-cols-2 gap-12 mt-3">
 
-**NVIDIA Sharing Techniques:**
+<div class="px-2 py-1 bg-blue-100 dark:bg-blue-900 rounded">
 
 **Time-Slicing**
-- ✓ Works on any GPU
-- ✓ Flexible for dev/bursty workloads
-- ✗ No isolation between pods
+
+<div class="mt-2 space-y-2">
+<div>🌟 Works on any GPU</div>
+<div>🌟 Flexible for dev/bursty workloads</div>
+<div>⛔ No isolation between pods</div>
+</div>
+
+</div>
+
+<div class="px-2 py-1 bg-purple-100 dark:bg-purple-900 rounded">
 
 **MIG (Multi-Instance GPU)**
-- ✓ Hardware isolation
-- ✓ Production-ready for multi-tenant
-- ✗ A100/H100 only
 
+<div class="mt-2 space-y-2">
+<div>🌟 Hardware isolation</div>
+<div>🌟 Production-ready for multi-tenant</div>
+<div>⛔ A100/H100 only</div>
 </div>
 
 </div>
 
-<div class="mt-8 px-4 py-3 bg-green-100 dark:bg-green-900 rounded text-center font-semibold" v-click>
+</div>
+
+<div class="mt-6 px-4 py-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 Pick sharing strategy based on isolation needs and GPU model
 

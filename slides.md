@@ -1,6 +1,6 @@
 ---
 theme: default
-background: https://images.unsplash.com/photo-1639322537504-6427a16b0a28?auto=format&fit=crop&w=1920
+background: white
 class: text-center
 highlighter: shiki
 lineNumbers: true
@@ -8,8 +8,25 @@ drawings:
   persist: false
 transition: slide-left
 title: GPUs on Kubernetes Unlocked
+info: |
+  ## GPUs on Kubernetes Unlocked
+
+  Understanding GPU scheduling and resource management
+
+  Presenter: Roland Huß, Distinguished Engineer, Red Hat
 mdc: true
 ---
+
+# GPUs on Kubernetes Unlocked
+
+## Understanding GPU scheduling and resource management
+
+<div class="mt-16">
+
+### Roland Huß
+#### Distinguished Engineer, Red Hat
+
+</div>
 
 ---
 src: ./slides/02-book-introduction.md
@@ -182,76 +199,71 @@ src: ./slides/35-two-motives-for-multi-gpu.md
 <!-- Slide 35: Two Motives for Multi-GPU -->
 
 ---
-src: ./slides/36-data-parallelism-scales-query-throughput.md
+src: ./slides/36-throughput-scaling-characteristics.md
 ---
-<!-- Slide 36: Data Parallelism Scales Query Throughput -->
+<!-- Slide 36: Throughput Scaling Characteristics -->
 
 ---
-src: ./slides/37-throughput-scaling-characteristics.md
+src: ./slides/37-tensor-parallelism-splits-layers-horizontally.md
 ---
-<!-- Slide 37: Throughput Scaling Characteristics -->
+<!-- Slide 37: Tensor Parallelism Splits Layers Horizontally -->
 
 ---
-src: ./slides/38-tensor-parallelism-splits-layers-horizontally.md
+src: ./slides/38-pipeline-parallelism-splits-layers-vertically.md
 ---
-<!-- Slide 38: Tensor Parallelism Splits Layers Horizontally -->
+<!-- Slide 38: Pipeline Parallelism Splits Layers Vertically -->
 
 ---
-src: ./slides/39-pipeline-parallelism-splits-layers-vertically.md
+src: ./slides/39-tensor-vs-pipeline-parallelism-trade-offs.md
 ---
-<!-- Slide 39: Pipeline Parallelism Splits Layers Vertically -->
+<!-- Slide 39: Tensor vs Pipeline Parallelism Trade-offs -->
 
 ---
-src: ./slides/40-tensor-vs-pipeline-parallelism-trade-offs.md
+src: ./slides/40-single-node-fast-and-simple.md
 ---
-<!-- Slide 40: Tensor vs Pipeline Parallelism Trade-offs -->
+<!-- Slide 40: Single-Node: Fast and Simple -->
 
 ---
-src: ./slides/41-single-node-fast-and-simple.md
+src: ./slides/41-multi-node-topology-and-bandwidth-hierarchy.md
 ---
-<!-- Slide 41: Single-Node: Fast and Simple -->
+<!-- Slide 41: Multi-Node Topology and Bandwidth Hierarchy -->
 
 ---
-src: ./slides/42-multi-node-topology-and-bandwidth-hierarchy.md
+src: ./slides/42-five-strategies-maximize-gpu-utilization.md
 ---
-<!-- Slide 42: Multi-Node Topology and Bandwidth Hierarchy -->
+<!-- Slide 42: Five Strategies Maximize GPU Utilization -->
 
 ---
-src: ./slides/43-five-strategies-maximize-gpu-utilization.md
+src: ./slides/43-2025-trends-shift-gpus-to-shared-substrate.md
 ---
-<!-- Slide 43: Five Strategies Maximize GPU Utilization -->
+<!-- Slide 43: 2025 Trends Shift GPUs to Shared Substrate -->
 
 ---
-src: ./slides/44-2025-trends-shift-gpus-to-shared-substrate.md
+src: ./slides/44-backup-three-layers-unlock-gpu-scheduling.md
 ---
-<!-- Slide 44: 2025 Trends Shift GPUs to Shared Substrate -->
+<!-- Slide 44: Three Layers Unlock GPU Scheduling -->
 
 ---
-src: ./slides/45-backup-three-layers-unlock-gpu-scheduling.md
+src: ./slides/45-questions.md
 ---
-<!-- Slide 45: Three Layers Unlock GPU Scheduling -->
+<!-- Slide 45: Questions? -->
 
 ---
-src: ./slides/46-questions.md
+src: ./slides/46-backup-section.md
 ---
-<!-- Slide 46: Questions? -->
+<!-- Slide 46: Backup Slides -->
 
 ---
-src: ./slides/47-backup-section.md
+src: ./slides/47-backup-nccl-and-rdma-enable-fast-gpu-communication.md
 ---
-<!-- Slide 47: Backup Slides -->
+<!-- Slide 47: NCCL and RDMA Enable Fast GPU Communication -->
 
 ---
-src: ./slides/48-backup-nccl-and-rdma-enable-fast-gpu-communication.md
+src: ./slides/48-backup-debugging-gpu-scheduling-issues.md
 ---
-<!-- Slide 48: NCCL and RDMA Enable Fast GPU Communication -->
+<!-- Slide 48: Debugging GPU Scheduling Issues -->
 
 ---
-src: ./slides/49-backup-debugging-gpu-scheduling-issues.md
+src: ./slides/49-backup-multi-instance-gpu-configuration-strategies.md
 ---
-<!-- Slide 49: Debugging GPU Scheduling Issues -->
-
----
-src: ./slides/50-backup-multi-instance-gpu-configuration-strategies.md
----
-<!-- Slide 50: Multi-Instance GPU Configuration Strategies -->
+<!-- Slide 49: Multi-Instance GPU Configuration Strategies -->

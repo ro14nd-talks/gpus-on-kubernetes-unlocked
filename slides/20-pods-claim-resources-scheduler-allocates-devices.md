@@ -53,7 +53,7 @@ spec:
 
 </div>
 
-<div v-click="3" class="mt-4 px-4 pt-3 pb-3 bg-purple-100 dark:bg-purple-900 rounded">
+<div v-click="3" class="mt-4 px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
 
 - Scheduler allocates matching device automatically
 - Pattern mirrors PVC/PV binding

@@ -27,7 +27,7 @@ spec:
 
 <div class="mb-2">
 
-### ✅ Double Protection
+### 🌟 Double Protection
 
 </div>
 
