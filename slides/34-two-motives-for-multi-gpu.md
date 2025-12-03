@@ -20,8 +20,9 @@ This slide introduces the taxonomy of multi-GPU parallelism strategies. There ar
    - Pipeline Parallelism: Multi-node capable, layer-level vertical splits, Ethernet
 
 This is an intro slide. Next slides cover:
-- Slide 36: Data Parallelism in detail
-- Slides 38-40: Model Parallelism strategies (Tensor and Pipeline)
+- Slide 35: Data Parallelism throughput scaling characteristics
+- Slides 36-37: Model Parallelism strategies (Tensor and Pipeline)
+- Slide 38: Comparison and best practices
 
 Timing: 90 seconds
 -->

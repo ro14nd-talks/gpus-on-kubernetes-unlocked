@@ -1,701 +1,828 @@
-# Speaker Notes: GPUs on Kubernetes Unlocked
+# Presenter Notes - GPUs on Kubernetes Unlocked
 
-**Total Duration**: ~32 minutes (32 slides × 1 minute each)
-**Target Audience**: Kubernetes practitioners at conference
-**Delivery Style**: Technical but conversational, question-based patterns section
-
----
-
-## Slide 1: Title Slide
-**Timing**: 1 minute
-
-**Notes**:
-Welcome! GPUs on Kubernetes - from invisible hardware to production workloads.
-
-**Opening**:
-- "Good [morning/afternoon]! Thank you for joining this session."
-- "Today we're going to unlock GPUs on Kubernetes."
-- "If you're running LLM workloads or planning to, this talk will show you exactly how to make GPUs work in K8s."
-- "We'll cover discovery, allocation, and sharing—the complete stack."
-
-**Set Expectations**:
-- "By the end, you'll know how to deploy the GPU Operator, schedule workloads intelligently, and choose the right deployment pattern for your use case."
+**Presentation Duration:** 40 minutes
+**Total Slides:** 47 (39 main slides + 8 backup slides)
+**Timing:** 90 seconds per slide average
+**Presenter:** Roland Huß, Distinguished Engineer, Red Hat
 
 ---
 
-## Slide 2: The Problem
-**Timing**: 1 minute
+## Slide 02: Book Introduction
+**Timing:** 30 seconds
 
-**Notes**:
-Kubernetes was built for CPU and memory. But LLMs run on GPUs. Without GPU support, your workloads can't run.
+This presentation is based on Chapter 5 of our O'Reilly book, Generative AI on Kubernetes.
 
-**Key Points**:
-- Kubernetes native resources: CPU cores, memory (RAM)
-- LLM workloads fundamentally depend on GPUs
-- Example: "A 70B parameter model needs 140GB of GPU memory—that won't run on CPU"
-- Without GPU support, your pods simply won't schedule
+Context:
+- Book provides comprehensive coverage of GenAI on K8s
+- This talk focuses specifically on GPU infrastructure
+- Chapter 5 covers discovery, allocation, orchestration, and deployment patterns
+- Book has 9 chapters covering entire GenAI stack
 
-**Transition**:
-"So what's the gap we need to fill?"
+Transition: "Let's start with the fundamental problem we're solving."
 
 ---
 
-## Slide 3: The Gap
-**Timing**: 1 minute
+## Slide 03: Kubernetes Lacks Native GPU Support
+**Timing:** 90 seconds
 
-**Notes**:
-Until the control plane knows GPUs exist, it's all manual work. Let's see how to make GPUs first-class resources.
+Kubernetes was designed around CPU and memory - these are first-class resources with native support.
 
-**Build Up Each Point**:
-1. **Control plane blind**: "Kubernetes API server has no idea GPUs exist"
-2. **Scheduler can't place**: "Scheduler might put your GPU workload on a CPU-only node"
-3. **Manual operations**: "Operators SSH into each node, install drivers by hand"
-4. **Not declarative**: "Everything we love about K8s—declarative config, GitOps—none of that works for GPUs by default"
+But large language models live and die by GPUs. Until the control plane knows what accelerators exist on each node, the scheduler can't place pods intelligently.
 
-**Emphasize**: "We need to fix this"
-
-**Transition**:
-"And here's how we do it—with three layers."
+This is the GPU gap we need to bridge.
 
 ---
 
-## Slide 4: Three Layers
-**Timing**: 1 minute
+## Slide 04: Three Layers Enable GPU Scheduling
+**Timing:** 90 seconds
 
-**Notes**:
-Discovery → Allocation → Orchestration. Each layer builds on the previous one.
+The solution has three distinct layers working together:
 
-**Explain the Diagram**:
-- **Orange (Discovery Layer)**: "First, we need to give Kubernetes a vocabulary—labels that describe GPU capabilities"
-- **Blue (Allocation Layer)**: "Second, we make GPUs schedulable resources that the scheduler understands"
-- **Green (Orchestration Layer)**: "Third, we manage everything declaratively with the GPU Operator"
+1. Discovery Layer: NFD and GFD label nodes with GPU capabilities
+2. Allocation Layer: Device plugins expose GPUs as schedulable resources
+3. Orchestration Layer: GPU Operator manages the complete lifecycle
 
-**Key Message**: "Each layer builds on the one below it. You can't allocate what you haven't discovered. You can't manage what you haven't allocated."
-
-**Transition**:
-"Let's start at the foundation: Discovery."
+Each layer builds on the one below it. Let's start at the foundation.
 
 ---
 
-## Slide 5: Discovery Layer (Section Header)
-**Timing**: Brief transition (included in next slide timing)
+## Slide 05: Discovery Layer - Finding GPUs in Your Cluster
+**Timing:** 20 seconds
 
-**Notes**:
-Give Kubernetes a vocabulary
+We just saw the three-layer architecture. Let's start at the foundation: the Discovery Layer.
 
-**Transition**:
-"How does Kubernetes learn what GPUs exist in your cluster?"
+Before Kubernetes can schedule GPU workloads, it needs to know which nodes have GPUs and what their capabilities are.
 
----
-
-## Slide 6: Node Feature Discovery
-**Timing**: 1 minute
-
-**Notes**:
-NFD detects "a GPU exists" but not which model or memory.
-
-**Explain NFD**:
-- "NFD is a general-purpose hardware detector"
-- "Deploy it once as a DaemonSet—one agent per node"
-- "Each agent scans hardware: CPU features, PCI devices, network interfaces"
-
-**Show the Command**:
-- "Installation is one kubectl apply command"
-- "Point it at the GitHub repo, uses Kustomize"
-
-**Show the Label**:
-- "`pci-0302_10de.present: true`"
-- "Class 0302 means 3D controller—that's a GPU"
-- "Vendor 10de is NVIDIA"
-- "So we know: 'this node has an NVIDIA GPU'"
-
-**Limitation**:
-- "But NFD doesn't know *which* GPU, how much memory, what CUDA version"
-- "For that, we need GPU Feature Discovery"
+This is where NFD and GFD come in—they label nodes with hardware capabilities.
 
 ---
 
-## Slide 7: GPU Feature Discovery
-**Timing**: 1 minute
+## Slide 06: Hardware Labels Enable Intelligent GPU Scheduling
+**Timing:** 90 seconds
 
-**Notes**:
-GFD adds GPU-specific details. Now we can schedule intelligently.
+Imagine a cluster with mixed GPU types - some nodes have T4s, others A100s, maybe some H100s.
 
-**Explain GFD**:
-- "GFD is the GPU specialist"
-- "Part of the NVIDIA GPU Operator (we'll see that later)"
-- "Runs on GPU nodes, queries nvidia-smi for details"
+Without labels, scheduler picks randomly. Pod fails because GPU doesn't meet requirements.
 
-**Walk Through Labels**:
-- **gpu.product**: "Exact model—A100-SXM4-40GB"
-- **gpu.memory**: "Memory in MiB—40,537 is about 40GB"
-- **gpu.family**: "Architecture—ampere, hopper, turing"
-- **mig.capable**: "Can this GPU be partitioned with MIG?"
-
-**Right Side (click)**:
-"Now the scheduler knows:
-- Which GPU model is on each node
-- How much memory it has
-- What architecture family
-- What capabilities it supports"
-
-**Transition**:
-"Discovery complete. Now let's make these GPUs schedulable."
+Two tools solve this: NFD for general hardware, GFD for GPU-specific details.
 
 ---
 
-## Slide 8: Allocation Layer (Section Header)
-**Timing**: Brief transition
+## Slide 07: NFD Provides Foundation for Hardware Discovery
+**Timing:** 120 seconds
 
-**Notes**:
-Make GPUs schedulable
+Node Feature Discovery is the foundation - detects all hardware types.
 
-**Transition**:
-"Labels are great, but they don't make GPUs schedulable. For that, we need device plugins."
+It labels nodes with CPU details, PCI devices, network interfaces.
 
----
+For GPUs: detects PCI device class (0302) and vendor ID (10de for NVIDIA).
 
-## Slide 9: Device Plugins
-**Timing**: 1 minute
-
-**Notes**:
-Device plugins turn GPUs into Kubernetes resources.
-
-**Explain Each Function** (build with clicks):
-1. **Register with Kubelet**: "Plugin talks to kubelet via gRPC"
-2. **Report GPU inventory**: "Kubelet asks 'what GPUs do you have?' Plugin responds with IDs and health"
-3. **Expose as nvidia.com/gpu**: "Creates an extended resource, just like CPU or memory"
-4. **Scheduler sees it**: "Now the API server advertises 'this node has 4 GPUs available'"
-
-**Bottom Message** (click):
-"GPUs become schedulable resources"
-
-**Key Point**: "This is the magic moment—GPUs go from invisible to first-class resources in Kubernetes"
+But NFD only knows "GPU exists" - not model, memory, or capabilities.
 
 ---
 
-## Slide 10: Request a GPU
-**Timing**: 1 minute
+## Slide 08: GFD Delivers Model-Specific GPU Information
+**Timing:** 90 seconds
 
-**Notes**:
-Simplest approach: request like CPU. But scheduler is GPU-blind.
+GPU Feature Discovery adds the detailed GPU information NFD lacks.
 
-**Show the YAML**:
-- "Just like requesting CPU or memory"
-- "`nvidia.com/gpu: 1` in your limits"
-- "Scheduler finds a node with a free GPU, kubelet allocates it"
+Uses nvidia-smi to gather comprehensive data: exact model, memory size, architecture, CUDA capabilities, MIG support.
 
-**Pros and Cons** (click):
-**Simple but limited**:
-- "Works great if all your GPUs are identical"
-- "But in real clusters, you have mixed GPUs—A100s, T4s, V100s"
-- "A model needing 40GB won't fit on a 16GB T4"
-- "This approach treats all GPUs the same—scheduler picks randomly"
+These labels enable fine-grained scheduling - target "A100 with 40GB+" or "Hopper architecture only".
 
-**Transition**:
-"So how do we add precision?"
+GFD is part of the GPU Operator we'll cover later.
 
 ---
 
-## Slide 11: Add Precision with Labels
-**Timing**: 1 minute
+## Slide 09: NFD Detects Presence, GFD Provides Specifications
+**Timing:** 90 seconds
 
-**Notes**:
-Combine resource requests with labels for intelligent placement.
+Quick comparison:
 
-**First Example**:
-- "Combine resource request with nodeSelector"
-- "Still request `nvidia.com/gpu: 1`"
-- "But also: `gpu.family: ampere`"
-- "Now you get an Ampere GPU specifically—A100 or A30"
+NFD: "this node has an NVIDIA GPU"
+GFD: "this node has 4× A100 40GB GPUs with CUDA 12.2"
 
-**Second Example** (click):
-- "Node affinity gives you even more power"
-- "Rich expressions: greater-than, in, not-in"
-- "Here: GPU memory must be > 40,000 MiB"
-- "Scheduler only considers nodes with 40GB+ GPUs"
+Both label the same nodes, different detail levels.
 
-**Transition**:
-"But what about protecting GPU nodes from non-GPU workloads?"
+The scheduler uses these labels for intelligent placement decisions.
+
+Now that we can discover and label GPUs, how do we allocate them?
 
 ---
 
-## Slide 12: Protect GPU Nodes
-**Timing**: 1 minute
+## Slide 10: Allocation Layer - Making GPUs Schedulable
+**Timing:** 20 seconds
 
-**Notes**:
-Taints keep GPU nodes for GPU workloads only.
+Discovery gives us labeled nodes. Now we move to the second layer: Allocation.
 
-**Left Side**:
-**Taint GPU nodes**:
-- "Use kubectl taint with a label selector"
-- "All nodes with `gpu.count` label get tainted"
-- "`NoSchedule` effect means: default deny"
+Labels alone don't allocate resources. We need to expose GPUs as countable, schedulable resources that Kubernetes understands.
 
-**Right Side** (click):
-**Pods must tolerate**:
-- "GPU workloads add a toleration"
-- "`operator: Exists` means tolerate any value"
-- "Now this pod *can* schedule on tainted GPU nodes"
-
-**Bottom Message** (click):
-- "Why do this? Expensive GPU nodes shouldn't run nginx or random batch jobs"
-- "Taints protect them—only GPU workloads allowed"
+That's where device plugins and scheduling strategies come in.
 
 ---
 
-## Slide 13: Dynamic Resource Allocation
-**Timing**: 1 minute
+## Slide 11: Device Plugins Turn GPUs Into Schedulable Resources
+**Timing:** 120 seconds
 
-**Notes**:
-DRA is the future: intent-based GPU requests. Still experimental.
+Device Plugin framework extends Kubernetes beyond CPU and memory.
 
-**Explain DRA**:
-- "Beta in Kubernetes 1.33, disabled by default"
-- "Think of it like PersistentVolumeClaims for GPUs"
-- "You declare intent: 'I need an A100 with at least 40Gi memory'"
-- "Scheduler resolves to specific device at scheduling time"
+gRPC interface between kubelet and vendor plugin.
 
-**Show the YAML**:
-- "ResourceClaimTemplate describes what you want"
-- "`deviceClassName`: gpu.nvidia.com/a100"
-- "`minMemory: 40Gi`"
-- "Scheduler finds a matching GPU"
+The flow:
+1. Device plugin registers with kubelet via gRPC
+2. Kubelet asks for device list
+3. Plugin reports GPU inventory (IDs, health)
+4. Kubelet advertises to API server as extended resource
+5. Scheduler reads nvidia.com/gpu: 4 and can schedule pods
 
-**Status** (click):
-- "Still experimental—NVIDIA has a DRA driver but it's marked experimental"
-- "Not production-ready yet"
-- "But watch this space—it's where Kubernetes is headed"
+Clean abstraction - Kubernetes doesn't need GPU-specific code.
 
-**Transition**:
-"Scheduling works. But what about operations?"
+NVIDIA, AMD, Intel each provide their own device plugin.
+
+This is the magic moment—GPUs go from invisible hardware to first-class schedulable resources.
 
 ---
 
-## Slide 14: Orchestration Layer (Section Header)
-**Timing**: Brief transition
+## Slide 12: Resource-Based Scheduling: Simple and Direct
+**Timing:** 90 seconds
 
-**Notes**:
-Stay declarative
+Simplest scheduling approach: request GPUs like CPU or memory.
 
-**Transition**:
-"We can schedule GPUs. But who installs the drivers? Who configures the runtime? Who monitors GPU health?"
+Device plugin advertises count, pod requests count, scheduler matches.
 
----
+Works great for homogeneous clusters with one GPU type.
 
-## Slide 15: What's Still Missing?
-**Timing**: 1 minute
+Problem: scheduler sees all GPUs as identical. Model needs 40GB but gets scheduled on 16GB T4 → fails at runtime.
 
-**Notes**:
-Scheduling works, but operations are still manual.
-
-**Build the List** (clicks):
-1. **Driver installation**: "NVIDIA drivers, kernel modules, CUDA libraries—must match GPU and kernel"
-2. **Runtime configuration**: "Container runtime needs to inject GPU devices into containers"
-3. **Health monitoring**: "ECC errors, temperature throttling, GPU resets"
-4. **Metrics collection**: "Utilization, memory usage, power draw"
-5. **Keeping everything in sync**: "Driver version must match device plugin config, runtime must be configured correctly"
-
-**Bottom Message** (click):
-"All of this is manual work" (emphasize the pain)
-- "SSH into each node"
-- "Install drivers by hand"
-- "Configure containerd manually"
-- "Doesn't scale, not declarative"
-
-**Transition**:
-"Enter the GPU Operator."
+For heterogeneous clusters, we need label-based precision.
 
 ---
 
-## Slide 16: GPU Operator
-**Timing**: 1 minute
+## Slide 13: Resource Requests Trade Simplicity for GPU Precision
+**Timing:** 90 seconds
 
-**Notes**:
-GPU Operator automates everything: drivers, runtime, monitoring.
+Resource-based scheduling shines in simplicity.
 
-**Big Message**:
-"One operator to manage it all"
+If all your nodes have identical GPUs (all T4s or all A100s), this is perfect.
 
-**Components** (build with clicks):
-- **Driver containers**: "Automated driver installation"
-- **Container toolkit**: "Runtime configuration"
-- **GPU Feature Discovery**: "We already saw this—GFD labels"
-- **Device plugin**: "We saw this too—exposes nvidia.com/gpu"
-- **MIG manager**: "Handles GPU partitioning (coming up)"
-- **DCGM metrics**: "Prometheus metrics for monitoring"
+But in production heterogeneous clusters with mix of GPU types, the limitations become painful.
 
-**Key Point**:
-- "Six components, one operator"
-- "Deploy once, everything is configured"
-- "All declarative via ClusterPolicy custom resource"
+Scheduler can't distinguish between a $5K T4 and a $30K H100.
+
+For precise placement, combine with labels.
 
 ---
 
-## Slide 17: Declarative Management
-**Timing**: 1 minute
+## Slide 14: Request Specific GPU Models with nodeSelector
+**Timing:** 90 seconds
 
-**Notes**:
-Configure once with ClusterPolicy. Operator handles the rest.
+NodeSelector: simplest label-based approach - direct key-value match.
 
-**Show the ClusterPolicy**:
-- "This is a Kubernetes custom resource"
-- "Defines desired state for GPU management"
+Pod specifies exact requirement, scheduler ONLY considers nodes with that label.
 
-**Walk Through**:
-- **gfd: enabled**: "Turn on GPU Feature Discovery"
-- **devicePlugin.config**: "Reference a ConfigMap for advanced config like time-slicing"
-- **mig.strategy: mixed**: "Enable MIG with mixed profiles"
+Example: Workload tested on T4s in dev, wants same in production for consistency.
 
-**Bottom Message** (click):
-"Change policy, operator reconciles cluster"
-- "Edit this YAML, apply it"
-- "Operator sees the change, reconciles all nodes"
-- "Drivers update, configs sync, everything stays aligned"
-- "That's declarative management"
+Limitation: Can't express "T4 OR A10" or "memory > 24GB". All-or-nothing.
 
-**Transition**:
-"Now let's talk about deployment patterns. You know *how* to schedule GPUs—but *when* do you use what?"
+For flexible requirements, use node affinity.
 
 ---
 
-## Slide 18: Deployment Patterns (Section Header)
-**Timing**: Brief transition
+## Slide 15: Match GPUs by Memory Size with Node Affinity
+**Timing:** 120 seconds
 
-**Notes**:
-Model size and latency dictate layout
+Node affinity unlocks rich expressions: 'greater than', 'in list', 'exists' operators.
 
-**Transition**:
-"Different workloads need different GPU layouts. Let's see four common patterns."
+This spec: "GPU memory MUST be > 40000 MiB (40GB)"
 
----
+Matches: A100 40GB, A100 80GB, H100 80GB
+Rejects: T4 16GB, A10 24GB
 
-## Slide 19: Four Common Patterns
-**Timing**: 1 minute
+Can also use preferredDuringScheduling for soft preferences: "prefer Hopper but Ampere is okay"
 
-**Notes**:
-Different workloads need different GPU layouts.
-
-**Present as Questions** (clicks):
-1. "Need to handle more requests? → Throughput scaling"
-2. "Model needs tight GPU cooperation? → Single-server multi-GPU"
-3. "Model too huge for one server? → Multi-node multi-GPU"
-4. "Workloads are light and bursty? → GPU sharing"
-
-**Key Message**:
-"The pattern you choose depends on your requirements: model size, latency needs, throughput targets, budget"
-
-**Transition**:
-"Let's look at each pattern."
+Use case: Workload needs minimum memory but flexible on GPU model.
 
 ---
 
-## Slide 20: More Requests? Scale Horizontally
-**Timing**: 1 minute
+## Slide 16: Taints Protect GPU Nodes From CPU Workloads
+**Timing:** 90 seconds
 
-**Notes**:
-Simple horizontal scaling. Each replica serves different requests.
+Taints protect expensive GPU nodes from running cheap workloads.
 
-**Show the Image**:
-"Multiple independent model servers behind a load balancer"
+Left example: Node taint with NoSchedule effect rejects pods without matching toleration.
+Right example: Pod toleration opts-in to GPU nodes.
 
-**Explain**:
-- "Just a Deployment with replicas: 8"
-- "Each pod gets 1 GPU"
-- "Each replica serves different user requests independently"
+STRENGTHS:
+1. Protects expensive GPU resources - Prevents $30K/month GPU nodes from running cheap workloads like nginx
+2. Explicit opt-in model - Only pods with tolerations can access GPU nodes - intentional, not accidental
+3. Complements resource requests - Works alongside nvidia.com/gpu: 1 for layered protection
+4. Prevents accidental placement - Random pods won't land on GPU nodes during scale-up events
 
-**Result** (click):
-- "8 GPUs = 8× throughput"
-- "Multiple independent replicas"
+LIMITATIONS:
+1. Requires manual toleration setup - Every GPU pod must add tolerations - easy to forget
+2. Extra YAML complexity - Additional stanza in every GPU pod spec
+3. Easy to misconfigure - Typo in taint key/value/effect breaks scheduling silently
+4. No warning on missing toleration - Pod just won't schedule - no proactive feedback
 
-**Use Case**:
-- "High queries per second"
-- "Model fits in single GPU (e.g., 7B model quantized to 8GB)"
-- "You have 1000 concurrent users—scale horizontally"
-
-**Limitation**:
-"Doesn't reduce single-request latency. Each request still processes on one GPU."
+Best practice: Taint all GPU nodes in heterogeneous clusters to prevent resource waste.
 
 ---
 
-## Slide 21: Tight Cooperation? Tensor Parallelism
-**Timing**: 1 minute
+## Slide 17: When to Use Each Scheduling Approach
+**Timing:** 90 seconds
 
-**Notes**:
-When model needs 2-8 GPUs and low latency matters.
+Decision tree for scheduling approach:
 
-**Show the Image**:
-"Multiple GPUs in one server, connected by fast NVLink"
+Homogeneous cluster (one GPU type): Resource request sufficient
 
-**Explain** (clicks):
-- "Split layers horizontally across GPUs"
-- "All GPUs work on the same layer simultaneously"
-- "Frequent communication after each layer—need fast interconnects"
-- "NVLink provides ~600 GB/s bandwidth"
+Multiple GPU types:
+- Know exact model needed: nodeSelector
+- Flexible requirements (min memory): Affinity with Gt
+- Need to protect expensive nodes: Add taints
 
-**YAML**:
-- "Request `nvidia.com/gpu: 4`"
-- "All on same node"
+Pattern: Start simple, add complexity only when needed.
 
-**Use Case**:
-- "Model needs 2-8 GPUs worth of memory"
-- "Low latency is critical"
-- "Example: 70B model needs ~140GB—spread across 4× A100 (40GB each)"
+Most production: Resource + affinity + taints combined
 
 ---
 
-## Slide 22: Huge Models? Pipeline Parallelism
-**Timing**: 1 minute
+## Slide 18: Combined Approach Is Production Best Practice
+**Timing:** 90 seconds
 
-**Notes**:
-When no single server is big enough. Communication overhead increases.
+Production workloads combine both mechanisms:
 
-**Show the Image**:
-"Multiple nodes, each with GPUs, connected via network"
+Resource request (nvidia.com/gpu: 1) ensures scheduler finds node with FREE GPU
 
-**Explain** (clicks):
-- "Split model vertically by layers"
-- "First layers on node 1, next layers on node 2"
-- "Network communication (InfiniBand or Ethernet)"
-- "~12.5 GB/s vs 600 GB/s intra-node—50x slower"
+Label selector ensures that GPU is correct type (Ampere architecture)
 
-**Orchestration**:
-- "Ray.io, StatefulSets, gang scheduling"
-- "vLLM uses Ray internally for multi-node"
+Double protection: right GPU + available GPU
 
-**Use Case**:
-- "Model exceeds single-server capacity"
-- "175B+ parameter models"
-
-**Trade-off**:
-- "Scales beyond one box, but communication overhead increases"
-- "Operational complexity goes up"
+This pattern is what you'll see in most production deployments.
 
 ---
 
-## Slide 23: Tensor vs Pipeline Comparison
-**Timing**: 1 minute
+## Slide 19: DRA Requests GPUs By Intent Not Model
+**Timing:** 90 seconds
 
-**Notes**:
-Two parallelism strategies with different trade-offs.
+Dynamic Resource Allocation (DRA) shifts from static resource requests to intent-based allocation.
 
-**Show the Image**:
-"Visual comparison of tensor (horizontal) vs pipeline (vertical) splitting"
+Key concept: Request by capability/intent, not hardcoded model names.
 
-**Walk Through Table**:
-- **Split**: "Within layer vs by layer"
-- **Communication**: "Frequent vs infrequent"
-- **Best for**: "Single node vs multi-node"
-- **Latency**: "Lower vs higher"
+Example workload requirement: "GPU with minimum 40GB memory, MIG disabled"
+Scheduler resolves this to actual GPU using DeviceClass and parameters.
 
-**Hybrid** (click):
-- "In practice, combine them"
-- "Tensor parallelism within each node (leverage NVLink)"
-- "Pipeline parallelism across nodes (tolerate network)"
-- "Example: 2 nodes, 4 GPUs each = 4-way tensor, 2-way pipeline"
+DeviceClass resources are defined by GPU vendors (NVIDIA, AMD, Intel) as CRDs.
+Each vendor provides a DRA driver that understands their hardware capabilities.
+
+Similar to PVC for storage - you request by capacity/class/access mode, not specific disk model.
+
+The beta status, adoption concerns, and future direction are covered in slide 21.
 
 ---
 
-## Slide 24: Light Workloads? Time-Slicing
-**Timing**: 1 minute
+## Slide 20: Pods Claim Resources, Scheduler Allocates Devices
+**Timing:** 90 seconds
 
-**Notes**:
-Oversubscribe GPUs for bursty, lightweight workloads.
+DRA uses template-based pattern for resource allocation.
 
-**Explain**:
-- "1 physical GPU → 8 virtual GPUs"
-- "ConfigMap config: `replicas: 8`"
-- "Each pod requests '1 GPU' but they're all on the same physical GPU"
+Left: ResourceClaimTemplate defines requirements (device class, memory, etc.)
+Right: Pod references template via resourceClaims, uses it in containers
 
-**Key Points** (click):
-- **No isolation**: "Pods share memory, can interfere"
-- **Can burst**: "If others are idle, one pod can use full GPU"
-- **90% cost savings**: "One A100 serving 8 small models instead of sitting idle"
+Flow:
+1. Admin creates ResourceClaimTemplate (reusable)
+2. Pod references template by name
+3. Scheduler creates ResourceClaim from template
+4. Allocates actual GPU matching requirements
+5. Pod container claims the allocated resource
 
-**Use Case**:
-- "Dev environments"
-- "Bursty workloads (not all busy simultaneously)"
-- "Lightweight inference"
-
-**Warning**:
-"Not for large LLMs—they need dedicated memory"
+Similar to PVC/PV pattern: define requirements, bind to actual resource.
 
 ---
 
-## Slide 25: Need Isolation? MIG
-**Timing**: 1 minute
+## Slide 21: DRA Is Promising But Not Production-Ready
+**Timing:** 90 seconds
 
-**Notes**:
-MIG for safe sharing with guaranteed resources.
+DRA benefits are compelling: precise specifications like "40GB+ A100" without manual label conventions, intelligent dynamic allocation resolved at schedule time.
 
-**Explain** (clicks):
-- "Hardware partitioning on A100, H100, newer GPUs"
-- "Dedicated memory per instance—can't steal from others"
-- "Strong isolation—separate fault domains"
-- "Fixed profiles—can't create arbitrary sizes"
+Example use cases for DRA:
+- MIG partitioning
+- Topology-aware allocation
+- Device sharing policies
+- Composable multi-device requests
 
-**Profiles** (click):
-- "1g.5gb, 2g.10gb, 4g.20gb, etc."
-- "Example: Split A100 40GB into 7× 5GB instances"
+Current status and limitations:
+- Beta in Kubernetes 1.33 (disabled by default, requires feature gate)
+- API still evolving, may change
+- NVIDIA DRA driver experimental
+- Few production users, limited ecosystem adoption
+- Cluster autoscalers don't fully understand DRA claims yet
 
-**Use Case**:
-- "Multi-tenant production"
-- "Strict SLAs, guaranteed resources"
-- "Multiple small models (e.g., several 7B models at ~5-10GB each)"
+Future direction:
+- DRA is Kubernetes' intended replacement for device plugins
+- Will become the standard mechanism for extended resources
+- Vendors (NVIDIA, AMD, Intel) actively developing DRA drivers
+- Moving toward production readiness
 
----
+Recommendation: Use traditional scheduling (resource requests + labels) for production today, but start learning DRA now.
 
-## Slide 26: Time-Slicing vs MIG
-**Timing**: 1 minute
-
-**Notes**:
-Choose based on your isolation and cost requirements.
-
-**Table Comparison**:
-- **Isolation**: None vs Strong
-- **Flexibility**: Any GPU vs A100/H100+ only
-- **Use case**: Dev/bursty vs Production
-
-**Summary** (click):
-- "Time-slicing: flexibility and cost savings"
-  - "Use for dev, experimentation, bursty workloads"
-- "MIG: isolation and predictability"
-  - "Use for production, multi-tenancy, guaranteed performance"
-
-**Decision Framework**:
-"Choose based on: Do you need isolation? Do you need guaranteed resources? Or do you prioritize flexibility and cost?"
+When it stabilizes, DRA will replace much manual labeling and selection logic with intent-based requests.
 
 ---
 
-## Slide 27: Best Practices (Section Header)
-**Timing**: Brief transition
+## Slide 22: Orchestration Layer - NVIDIA GPU Operator
+**Timing:** 20 seconds
 
-**Notes**:
-Optimize for production
+We've covered Discovery and Allocation. Now the top layer: Orchestration.
 
-**Transition**:
-"Let's wrap up with production best practices."
+Discovery labels nodes. Device plugins expose resources. But production GPU support needs more: driver installation, runtime configuration, monitoring, lifecycle management.
 
----
-
-## Slide 28: Memory and Monitoring
-**Timing**: 1 minute
-
-**Notes**:
-Production essentials: memory management and monitoring.
-
-**Each Point** (clicks):
-- **Pre-allocate**: "Avoid memory fragmentation—allocate large blocks upfront"
-- **Quantize**: "4-bit/8-bit weights reduce memory 50-87% with minimal quality loss"
-- **DCGM → Prometheus**: "GPU Operator deploys DCGM exporter automatically"
-- **Watch metrics**: "Utilization, temperature, ECC errors"
-
-**Monitoring is Critical**:
-"GPUs are expensive. You need to know: are they being used? Are they healthy?"
+The NVIDIA GPU Operator manages all of this declaratively.
 
 ---
 
-## Slide 29: Scaling and Cost
-**Timing**: 1 minute
+## Slide 23: Scheduling GPUs Is Only Half the Battle
+**Timing:** 90 seconds
 
-**Notes**:
-Scale intelligently and optimize costs.
+We've built discovery and allocation layers. GPUs are schedulable. But production needs more.
 
-**Each Point** (clicks):
-- **Auto-scale**: "KEDA or HPA based on request queue depth"
-- **Gang scheduling**: "Kueue, Volcano for multi-pod jobs—all pods start together"
-- **Share underutilized GPUs**: "If utilization is low, use time-slicing or MIG"
-- **Right-size**: "Don't use an 80GB A100 for a 7B model that fits in 14GB—use a cheaper T4"
+What we have:
+- NFD/GFD label nodes with GPU details
+- Device plugins expose nvidia.com/gpu resource
+- Scheduler knows which nodes have GPUs and can place pods
 
-**Cost Optimization**:
-"GPUs are the most expensive part of your infrastructure. Share them when possible, right-size them always."
+What's missing:
+- Driver installation: NVIDIA kernel modules, CUDA libraries must match kernel version
+- Container runtime: Need NVIDIA Container Toolkit to inject GPU devices into containers
+- Monitoring: Track GPU health, temperature, ECC errors
+- Lifecycle management: Keep driver versions, configs synchronized across all GPU nodes
 
----
+Traditional approach: SSH into each GPU node, install drivers manually, configure runtime, set up monitoring.
 
-## Slide 30: What's New in 2025
-**Timing**: 1 minute
+Problems:
+- Configuration drift across nodes
+- Driver/kernel version mismatches
+- Manual updates don't scale to 100+ node clusters
+- Not declarative, not GitOps-friendly
 
-**Notes**:
-The ecosystem is maturing fast.
-
-**Each Point** (clicks):
-- **NVIDIA KAI Scheduler**: "Open-sourced in January 2025—enterprise GPU scheduler"
-- **Queue-based governance**: "Kueue for fair sharing across teams with quotas"
-- **GPUs as shared substrate**: "Cultural shift—treat GPUs as shared pool, not per-team pets"
-- **DRA moving to production**: "Dynamic Resource Allocation gaining vendor support"
-
-**Key Message**:
-"The ecosystem is evolving rapidly. New tools, better governance, moving toward production-grade DRA."
+This is where the GPU Operator comes in—it automates ALL of this declaratively.
 
 ---
 
-## Slide 31: Next Steps
-**Timing**: 1 minute
+## Slide 24: GPU Operator Automates Six Critical Components
+**Timing:** 90 seconds
 
-**Notes**:
-You now know how to unlock GPUs on Kubernetes.
+NVIDIA GPU Operator is the orchestration layer—one operator managing everything.
 
-**Actionable Steps** (clicks):
-1. **Deploy GPU Operator**: "One Helm install, everything configured"
-2. **Start simple**: "nvidia.com/gpu: 1—resource-based scheduling"
-3. **Add labels**: "For heterogeneous fleets, use nodeSelector or affinity"
-4. **Choose pattern**: "Based on model size and requirements"
-5. **Monitor and optimize**: "DCGM metrics, watch utilization, iterate"
+We've seen Device Plugin (✓) and GFD (✓) in earlier sections. Now the full picture:
 
-**Summary** (click):
-"Discovery + Allocation + Orchestration"
-- "Three layers that build on each other"
-- "You now understand how they fit together"
+1. Driver Container: Automated driver deployment via privileged container
+   - Compiles drivers for node's kernel or uses precompiled version
+   - No SSH to nodes, no manual installation
+
+2. Container Toolkit: Runtime hooks that inject GPU devices
+   - Extends containerd/CRI-O to inject /dev/nvidia* devices
+   - Automatic GPU driver access for containers
+
+3. Device Plugin (✓): Already covered in allocation layer
+   - Exposes nvidia.com/gpu as schedulable resource
+
+4. GPU Feature Discovery (✓): Already covered in discovery layer
+   - Enriches nodes with detailed NVIDIA-specific labels
+
+5. MIG Manager: Handles Multi-Instance GPU partitioning
+   - Automates MIG partition setup (we'll cover sharing strategies soon)
+   - No manual nvidia-smi configuration needed
+
+6. DCGM Exporter: GPU health and performance metrics
+   - Utilization, memory, temperature, ECC errors → Prometheus
+   - Integrates with cluster monitoring stack
+
+All configured through single ClusterPolicy custom resource.
+Fully declarative: no SSH, no manual updates, everything stays in sync.
+
+Key message: "Instead of SSHing into nodes to install drivers and configure runtimes, you declare desired state in ClusterPolicy and the operator reconciles everything."
 
 ---
 
-## Slide 32: Thank You
-**Timing**: 1 minute
+## Slide 25: GPU Sharing - Sub-GPU Allocation
+**Timing:** 15 seconds
 
-**Notes**:
-End of presentation. Open for questions.
+So far: exclusive GPU access - one pod gets one whole GPU.
 
-**Closing**:
-- "That's it! You now know how to unlock GPUs on Kubernetes."
-- "From invisible hardware to production-ready workloads."
-- "Discovery, allocation, orchestration, and deployment patterns."
+But what if workload only needs 20% of GPU? Multiple small models on one card?
 
-**Open for Questions**:
-- "I'm happy to take questions now."
-- "Or catch me after the session if you want to go deeper on specific topics."
+GPUs are expensive. Sharing them efficiently is critical.
+
+NVIDIA provides two mechanisms: time-slicing and MIG.
 
 ---
 
-## Additional Tips for Delivery
+## Slide 26: NVIDIA GPU Sharing Maximizes Utilization
+**Timing:** 90 seconds
 
-### General Presentation Tips
-- **Pace yourself**: 1 minute per slide is the target, but some may go faster (section headers) and some slower (complex topics)
-- **Use the images**: Point to the diagrams, especially the three-layer architecture and the parallelism comparisons
-- **Interactive elements**: Use `<v-clicks>` to build slides progressively—don't show everything at once
-- **Questions**: Pause after each section (Discovery, Allocation, Orchestration, Patterns) to ask "Any questions so far?"
+Why this slide matters: Before diving into technical details of time-slicing and MIG, establish WHY GPU sharing matters and WHAT options exist.
 
-### Technical Depth
-- **Adjust for audience**: If audience is more beginner, spend more time on basics. If advanced, go deeper on MIG strategies and DRA
-- **Real examples**: If you have production experience, substitute your own examples
-- **Live demo**: Consider adding a 2-minute live demo of deploying GPU Operator if time permits
+The problem: GPUs are the most expensive infrastructure component, but exclusive allocation leads to massive underutilization. A 7B model using 10GB sits on a 40GB A100 - wasting 75% of the memory.
 
-### Common Questions to Prepare For
-1. **"What about AMD GPUs?"**: "AMD has their own device plugin (amd-device-plugin). Same concepts, different vendor."
-2. **"Can I mix NVIDIA and AMD?"**: "Yes, different resource names. But operational complexity increases."
-3. **"MIG vs time-slicing—which should I use?"**: "Depends on isolation needs. Production with SLAs → MIG. Dev/test → time-slicing."
-4. **"What if I don't have GPUs yet?"**: "Start with the architecture. Deploy GPU Operator when you get GPUs. It's all declarative."
-5. **"How much does this cost?"**: "GPU Operator is free (open source). GPUs themselves—that's your cloud or hardware bill."
+Two approaches from NVIDIA:
+1. Time-slicing: Software-based oversubscription, works on any GPU, no isolation
+2. MIG (Multi-Instance GPU): Hardware partitioning, A100/H100 only, strong isolation
 
-### Transitions to Watch
-- **Discovery → Allocation**: "Labels are great, but they don't make GPUs schedulable..."
-- **Allocation → Orchestration**: "Scheduling works, but who manages the drivers?"
-- **Orchestration → Patterns**: "Now let's talk about when to use what..."
-- **Patterns → Best Practices**: "You know the patterns, let's optimize for production..."
+This overview prepares audience for detailed exploration of each technique.
 
-### Energy and Engagement
-- **Vary your tone**: Technical content can be dry—inject energy during transitions
-- **Use pauses**: After showing code, pause to let audience read
-- **Eye contact**: Don't just read slides—engage with audience
-- **Movement**: Step away from podium during section transitions
+---
 
-Good luck with your presentation! 🎤
+## Slide 27: Time-Slicing Oversubscribes GPUs
+**Timing:** 90 seconds
+
+Time-slicing is oversubscription.
+
+1 physical GPU advertised as N schedulable resources. Kubernetes thinks N GPUs exist.
+
+Pods time-share actual GPU - similar to CPU scheduler interleaving processes.
+
+ConfigMap defines sharing policy, referenced in ClusterPolicy devicePlugin config.
+
+Key: Compute time-sharing, NOT memory isolation. All pods share same VRAM.
+
+Why dev/test and bursty workloads:
+- Dev workloads are intermittent (short experiments, tests, debugging) with lots of idle time
+- Bursty workloads can use full GPU when available (unlike MIG's hard partitions)
+- Cost efficiency over isolation (share 1 GPU among 4-8 developers vs buying each a dedicated GPU)
+- No strict SLAs needed - acceptable performance variability
+- NOT for production: no memory isolation = pods can interfere, unpredictable performance
+
+Production alternative: MIG provides hardware isolation and guaranteed resources.
+
+---
+
+## Slide 28: Time-Slicing Trades Isolation for Density
+**Timing:** 90 seconds
+
+Time-slicing works great for certain patterns:
+
+Good: Many small workloads that are bursty - inference requests come in waves, notebooks run intermittently. They don't all peak at once. Also good for older GPUs (T4, V100) without MIG support.
+
+Watch out for:
+- No memory isolation: One pod can OOM others (one LLM loading 15GB leaves no room for others)
+- No fault isolation: Bad memory access crashes GPU → all pods fail (safety-critical workloads problematic)
+- Unpredictable performance: Contention if all pods active simultaneously
+- Multi-GPU requests ineffective: Requesting 2 virtual GPUs ≠ 2× performance (could get slices from 2 different physical GPUs with no speedup)
+
+Best for: many small, bursty tasks on one GPU.
+
+For isolation, use MIG.
+
+---
+
+## Slide 29: NVIDIA MIG Provides Hardware-Isolated Partitions
+**Timing:** 120 seconds
+
+Multi-Instance GPU (MIG) is true hardware partitioning - not time-sharing.
+
+A100 can be split into up to 7 MIG instances. Each gets:
+- Fixed memory (5GB, 10GB, 20GB, 40GB profiles)
+- Dedicated compute cores
+- Separate fault domain
+
+One MIG instance crashes, others keep running.
+
+Strategies:
+- Single: All GPUs same MIG config (simple but inflexible)
+- Mixed: Different partitions per GPU (flexible, complex)
+
+MIG Manager in GPU Operator handles partition creation automatically.
+
+---
+
+## Slide 30: MIG Provides Isolation at Cost of Flexibility
+**Timing:** 120 seconds
+
+MIG provides true hardware isolation - each partition gets dedicated memory and compute.
+
+Good For - Real isolation value:
+- Multi-tenant SaaS: Each customer gets guaranteed GPU slice, complete fault isolation
+- Multiple inference endpoints: 7 different models (5GB each) on one A100, no memory stealing
+- Production QoS: Guaranteed resources, predictable performance, one crash doesn't kill others
+- Fixed workloads: Know exactly what each partition needs, benefit from dedicated resources
+
+Limitations - Where it hurts:
+- Fixed profiles: Can't get 15GB partition - stuck with 10GB or 20GB (fixed: 1g.5gb, 2g.10gb, 3g.20gb, 7g.40gb)
+- No bursting: Dev workload might need 8GB normally but could use 15GB - MIG hard-limits to partition
+- Large models: 70B model in 4-bit needs 35GB, doesn't fit 20GB partition - must use whole GPU anyway
+- Ampere+ only: A100, H100, B100/B200 - older GPUs (T4, V100) can't use MIG
+
+Real-world pattern: MIG for strict multi-tenancy/production, time-slicing for dev/bursty workloads.
+
+Advanced: Can combine MIG + time-slicing (time-slice each MIG instance) for maximum density.
+
+---
+
+## Slide 31: Choose Time-Slicing for Flexibility, MIG for Isolation
+**Timing:** 90 seconds
+
+Streamlined comparison - 6 key decision factors:
+
+1. Isolation & Faults: MIG provides true hardware isolation, time-slicing shares everything
+2. Resource Guarantees: MIG guarantees memory+compute, time-slicing only guarantees time slices
+3. Flexibility: Time-slicing can burst, MIG is locked to partition size
+4. Complexity: Time-slicing is simple (just replica count), MIG requires understanding fixed profiles
+5. Hardware Support: Time-slicing works on all GPUs, MIG needs Ampere+
+6. Use Case: Dev/bursty → time-slicing, Production/multi-tenant → MIG
+
+Decision framework:
+- Need isolation? → MIG
+- Need flexibility? → Time-slicing
+- Have Ampere+ GPUs? → MIG available
+- Have older GPUs (T4, V100)? → Time-slicing only option
+- Dev environment? → Time-slicing
+- Production multi-tenant? → MIG
+
+---
+
+## Slide 32: Can Combine Time-Slicing and MIG for Maximum Density
+**Timing:** 90 seconds
+
+Advanced technique: Combine both for best of both worlds.
+
+Create MIG instances for memory isolation. Then time-slice each instance for density.
+
+Example: 2× 20GB MIG instances, time-slice each 2×. Result: 4 virtual GPUs with some memory isolation.
+
+Labels show -SHARED suffix to indicate this mode.
+
+For most LLM inference, won't use these much - models too large. But for many smaller models or batch jobs, invaluable.
+
+Speaking of large models: what if one GPU isn't enough?
+
+---
+
+## Slide 33: Multi-GPU Patterns - Scaling Out
+**Timing:** 15 seconds
+
+We've mastered splitting one GPU among many workloads.
+
+Now flip the problem: one workload needs many GPUs.
+
+Modern LLMs can exceed 100GB. Even A100 80GB isn't enough.
+
+This is where multi-GPU patterns come in.
+
+---
+
+## Slide 34: Two Dimensions Define Three GPU Strategies
+**Timing:** 90 seconds
+
+This slide introduces the taxonomy of multi-GPU parallelism strategies. There are two key dimensions:
+
+1. Strategy: Do we replicate the entire model (Data Parallelism) or split it (Model Parallelism)?
+   - Data Parallelism: Multiple complete copies for throughput scaling
+   - Model Parallelism: Split a single model when it's too large for one GPU
+
+2. Deployment: Single-node vs multi-node determines the communication patterns
+   - Tensor Parallelism: Single-node, layer-level horizontal splits, NVLink
+   - Pipeline Parallelism: Multi-node capable, layer-level vertical splits, Ethernet
+
+This is an intro slide. Next slides cover:
+- Slide 35: Data Parallelism throughput scaling characteristics
+- Slides 36-37: Model Parallelism strategies (Tensor and Pipeline)
+- Slide 38: Comparison and best practices
+
+---
+
+## Slide 35: Data Parallelism Trades Memory for Throughput
+**Timing:** 90 seconds
+
+Straightforward horizontal scaling.
+
+Kubernetes-native: Deployment + Service. Autoscale with HPA/KEDA.
+
+Limitations:
+- Each replica: full model in memory. 8 replicas of 40GB model = 320GB total
+- Doesn't reduce latency
+- Doesn't help if model doesn't fit 1 GPU
+
+For models exceeding GPU memory, use model parallelism.
+
+---
+
+## Slide 36: Tensor Parallelism Splits Layers Horizontally
+**Timing:** 120 seconds
+
+Tensor parallelism: Multiple GPUs in one server work together on each request.
+
+How it works:
+- All GPUs in a single server cooperate on the SAME layer simultaneously
+- Each GPU handles a different portion of the layer (horizontal split)
+- After processing each layer, GPUs exchange results via NVLink
+- This repeats for every layer in the model
+- Think: "Many hands make light work" - all GPUs chip in on each step
+
+Architecture:
+- Single server with NVLink/NVSwitch interconnect
+- 600 GB/s bandwidth between GPUs (50× faster than network)
+- All-to-all connectivity: any GPU can talk to any other GPU
+- Intra-GPU memory bandwidth: 900 GB/s (even faster within a single GPU)
+
+Why it's fast:
+- High communication frequency (after every layer) requires super-fast interconnect
+- NVLink provides the speed needed for constant GPU-to-GPU data exchange
+- Parallel processing: all GPUs work simultaneously, reducing latency
+
+Kubernetes deployment:
+- Single pod request: nvidia.com/gpu: 4 (or 8)
+- Scheduler finds node with enough free GPUs
+- CUDA_VISIBLE_DEVICES automatically configured by runtime
+- Framework (vLLM, TGI, PyTorch) initializes tensor parallelism
+- No special networking needed—everything stays local within the server
+
+Real-world example:
+- Llama2-70B model: 70 billion parameters, ~140GB memory at fp16 precision
+- Single A100 GPU: 40GB memory → model won't fit!
+- Solution: Split across 4 A100 GPUs (4 × 40GB = 160GB)
+- Each GPU holds 1/4 of each layer
+- Low latency critical for real-time inference
+
+Design principle:
+- Prefer single-node when possible (fastest, simplest)
+- Ideal for models fitting 1-8 GPUs (most models up to ~70B params)
+
+Limitations:
+- Typically 2-8 GPUs per server (NVLink topology limit on most hardware)
+- Can't exceed GPU count of largest node in your cluster
+- If you need 16 GPUs and nodes have 8 max, must use pipeline parallelism instead
+
+---
+
+## Slide 37: Pipeline Parallelism Splits Layers Vertically
+**Timing:** 120 seconds
+
+Pipeline parallelism: Distributes model layers across multiple nodes when the model is too large for a single server.
+
+How it works:
+- Different layers run on different GPUs/nodes (vertical split across layers)
+- Layer 1-10 on Node 1, Layer 11-20 on Node 2, etc.
+- Requests flow sequentially through the pipeline: Node 1 → Node 2 → Node 3
+- After processing each layer group, intermediate results sent to next node
+- Think: "Assembly line" - each station handles a different stage
+
+Architecture:
+- Multiple nodes connected via network (Ethernet or InfiniBand)
+- 100 Gbit Ethernet = 12.5 GB/s bandwidth
+- InfiniBand HDR = 25 GB/s (2× faster than Ethernet)
+- Still 24-50× slower than NVLink (600 GB/s within server vs 12-25 GB/s between servers)
+- PCIe 4.0 x16: 32 GB/s for CPU-GPU communication within node
+
+Why it works despite slower network:
+- Communication happens between stages (lower frequency than tensor parallelism)
+- Micro-batching hides latency: while Node 2 processes batch N, Node 1 already starts batch N+1
+- Overlapping computation and communication maximizes throughput
+- Tolerates slower interconnects because communication is less frequent
+
+Kubernetes deployment:
+- Ray.io provides distributed coordination across nodes
+- StatefulSets ensure stable network identities for inter-node communication
+- Gang scheduling ensures all pods start together (using Kueue or Volcano)
+- NCCL over RDMA for efficient GPU-to-GPU communication across network
+- InfiniBand recommended for production (2× bandwidth vs Ethernet)
+
+Real-world example:
+- GPT-3 175B parameters exceeds single 8-GPU server capacity (~320GB needed, max 320GB per server)
+- Solution: Distribute across 16+ GPUs on multiple nodes
+- Each node holds consecutive layers of the model
+- Models too large for single-server capacity require this approach
+
+Design principle:
+- Use when model exceeds single-server GPU capacity
+- Ideal for models requiring 16+ GPUs (beyond typical 8-GPU server limit)
+
+Limitations:
+- Multi-node coordination increases operational complexity
+- Higher latency than tensor parallelism due to sequential processing
+- Requires specialized scheduling (gang scheduling) and orchestration tools
+- Network bandwidth becomes bottleneck compared to single-server NVLink
+
+---
+
+## Slide 38: Tensor within nodes, pipeline across nodes
+**Timing:** 120 seconds
+
+Quick comparison of the two model parallelism strategies:
+
+Tensor Parallelism (Single-Node):
+- Horizontal split: all GPUs work on same layer, different parts
+- Needs fast links (NVLink ~600 GB/s)
+- Lower latency due to parallel processing
+- Single-node friendly
+- Common: 2-8 GPUs within one server
+- Simple Kubernetes: single pod, no special networking
+
+Pipeline Parallelism (Multi-Node):
+- Vertical split: different layers on different GPUs
+- Tolerates slower links (Ethernet 12.5 GB/s, InfiniBand 25 GB/s)
+- Higher latency due to sequential processing
+- Multi-node capable, scales beyond single server
+- Common: 2-4 stages across nodes, each stage can have multiple GPUs
+- Complex orchestration: Ray.io, gang scheduling
+
+Bandwidth hierarchy comparison:
+- Intra-GPU: 900 GB/s (memory bandwidth)
+- Intra-Node (NVLink): 600 GB/s → Tensor parallelism sweet spot
+- Inter-Node (Ethernet): 12.5 GB/s → 48× slower, pipeline tolerates this
+- Inter-Node (InfiniBand): 25 GB/s → 2× better than Ethernet, still 24× slower than NVLink
+
+Best of both: Hybrid approach
+- Use tensor within each node (leverage fast NVLink)
+- Use pipeline across nodes (tolerate network latency)
+- Example: 2 nodes × 8 GPUs each = 16 GPUs total
+  - 4-way tensor parallelism per node (within-node cooperation)
+  - 2-stage pipeline parallelism across nodes (cross-node scaling)
+- Gives low latency of tensor locally, scalability of pipeline globally
+
+Most large-scale LLM serving (GPT-4, Claude, etc.) uses this hybrid approach.
+
+Design principle from bandwidth hierarchy:
+- Prefer single-node when possible (fastest, simplest)
+- When model exceeds single server: tensor within nodes, pipeline across
+- Invest in InfiniBand if doing multi-node (2× faster than Ethernet)
+
+---
+
+## Slide 39: GPUs on Kubernetes: Unlocked
+**Timing:** 120 seconds
+
+This is the main conclusion slide - synthesizes the complete journey from gap to solution.
+
+KEY MESSAGE:
+You now have the complete pattern library to bridge the GPU scheduling gap and build production-ready GPU infrastructure.
+
+TALKING POINTS:
+
+1. FOUNDATION - Three Layers Bridge the Gap (30s)
+   - Discovery: Makes GPUs visible through labels (NFD + GFD)
+   - Allocation: Makes them schedulable through device plugins
+   - Orchestration: Automates everything with GPU Operator (ClusterPolicy)
+   - Result: Production-ready GPU scheduling on Kubernetes
+
+2. OPTIMIZATION - Sharing & Scaling Maximize Value (40s)
+   - GPU Sharing: Time-slicing and MIG maximize ROI on expensive hardware
+   - Multi-GPU Patterns: Data, tensor, pipeline parallelism enable scale from single GPU to clusters
+   - Decision Framework: Match pattern to workload (model size, latency requirements)
+   - Result: Full infrastructure potential unlocked
+
+3. CULTURAL SHIFT - GPUs as Shared Infrastructure (30s)
+   - Treat GPUs as shared, policy-driven substrate (not pets)
+   - Use declarative automation (ClusterPolicy, not SSH)
+   - Start with proven patterns (device plugins, GPU Operator)
+   - Adopt new tools as they mature (DRA, KAI scheduler, Kueue)
+
+TRANSITION TO NEXT SLIDE:
+"Let me give you five concrete strategies to maximize GPU utilization in your clusters..."
+
+VISUAL CUES:
+- Complete stack diagram shows all layers working together
+- Single summary equation emphasizes how pieces fit
+- Book reference for deeper dive into full GenAI stack
+
+This was Chapter 5 - one piece of the GenAI on Kubernetes puzzle. The book covers infrastructure, model serving, observability, security, cost management.
+
+---
+
+## Backup Slides
+
+The following backup slides (40-47) are available for Q&A or if time permits:
+
+- **Slide 40:** Five Strategies Maximize GPU Utilization
+- **Slide 41:** 2025 Trends Shift GPUs to Shared Substrate
+- **Slide 42:** Three Layers Unlock GPU Scheduling (backup reference)
+- **Slide 43:** Questions?
+- **Slide 44:** Backup Section marker
+- **Slide 45:** NCCL and RDMA Enable Fast GPU Communication
+- **Slide 46:** Debugging GPU Scheduling Issues
+- **Slide 47:** Multi-Instance GPU Configuration Strategies
+
+These provide technical depth for anticipated questions without cluttering the main presentation flow.
+
+---
+
+## Key Transitions and Timing Notes
+
+**Total Main Presentation Time:** ~35-38 minutes (slides 02-39)
+- Introduction & Discovery: ~8 minutes (slides 02-09)
+- Allocation Layer: ~11 minutes (slides 10-21)
+- Orchestration Layer: ~4 minutes (slides 22-24)
+- GPU Sharing: ~7 minutes (slides 25-32)
+- Multi-GPU Patterns: ~6 minutes (slides 33-38)
+- Conclusion: ~2 minutes (slide 39)
+
+**Buffer Time:** 2-5 minutes for Q&A or backup slides
+
+**Critical Transitions:**
+- Slide 09 → 10: "Now that we can discover and label GPUs, how do we allocate them?"
+- Slide 21 → 22: "We've covered Discovery and Allocation. Now the top layer: Orchestration."
+- Slide 24 → 25: "GPUs are expensive. Sharing them efficiently is critical."
+- Slide 32 → 33: "Speaking of large models: what if one GPU isn't enough?"
+
+---
+
+**End of Presenter Notes**

@@ -8,18 +8,14 @@ layout: default
 
 **Four Core Functions:**
 
-<v-clicks>
-
 1. **Device Discovery** — Detect GPUs, report to Kubelet
 2. **Resource Allocation** — Exclusive access by default
 3. **Health Monitoring** — Report unhealthy devices
 4. **Scheduler Integration** — Expose as `nvidia.com/gpu`
 
-</v-clicks>
-
 </div>
 
-<div v-click class="mt-6">
+<div class="mt-6">
 
 ```plantuml {scale: 0.75}
 @startuml

@@ -20,7 +20,7 @@ spec:
 
 <div class="mt-4 grid grid-cols-2 gap-8">
 
-<div v-click="1">
+<div>
 
 ## How It Works
 
@@ -31,7 +31,7 @@ spec:
 
 </div>
 
-<div v-click="2" class="p-4 bg-blue-100 dark:bg-blue-900 rounded">
+<div class="p-4 bg-blue-100 dark:bg-blue-900 rounded" v-click>
 
 ## Simple But Limited
 

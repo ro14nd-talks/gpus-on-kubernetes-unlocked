@@ -4,15 +4,11 @@ layout: default
 
 # NFD Provides Foundation for Hardware Discovery
 
-<v-clicks>
-
 - **General-purpose** hardware discovery
 - Detects CPU, PCI devices, network
 - Runs as DaemonSet and labels nodes automatically
 
-</v-clicks>
-
-<div v-click class="mt-4">
+<div class="mt-4">
 
 ```yaml {fontSize:'11px'}
 feature.node.kubernetes.io/pci-0302_10de.present: "true"

@@ -92,7 +92,7 @@ Kubernetes deployment:
 - No special networking needed—everything stays local within the server
 
 Real-world example:
-- Llama2-70B model: ~140GB parameters
+- Llama2-70B model: 70 billion parameters, ~140GB memory at fp16 precision
 - Single A100 GPU: 40GB memory → model won't fit!
 - Solution: Split across 4 A100 GPUs (4 × 40GB = 160GB)
 - Each GPU holds 1/4 of each layer

@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# Tensor vs Pipeline Parallelism Trade-offs
+# Tensor within nodes, pipeline across nodes
 
 <div class="overflow-x-auto">
 

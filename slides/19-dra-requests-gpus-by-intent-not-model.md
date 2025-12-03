@@ -4,7 +4,7 @@ layout: default
 
 # DRA Requests GPUs By Intent Not Model
 
-<div v-click="1" class="mt-6">
+<div class="mt-6">
 
 <div class="px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
 
@@ -23,7 +23,7 @@ layout: default
 
 </div>
 
-<div v-click="2" class="mt-4">
+<div class="mt-4">
 
 ```yaml {lines:false}
 apiVersion: resource.k8s.io/v1beta1

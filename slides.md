@@ -17,6 +17,17 @@ info: |
 mdc: true
 ---
 
+# GPUs on Kubernetes Unlocked
+
+## Understanding GPU scheduling and resource management
+
+<div class="mt-16">
+
+### Roland Huß
+#### Distinguished Engineer, Red Hat
+
+</div>
+
 ---
 src: ./slides/02-book-introduction.md
 ---
@@ -173,39 +184,39 @@ src: ./slides/32-can-combine-time-slicing-and-mig-for-maximum-density.md
 <!-- Slide 32: Can Combine Time-Slicing and MIG for Maximum Density -->
 
 ---
-src: ./slides/33-gpu-sharing-decision-framework.md
+src: ./slides/33-section-multi-gpu-patterns.md
 ---
-<!-- Slide 33: GPU Sharing Decision Framework -->
+<!-- Slide 33: Multi-GPU Patterns -->
 
 ---
-src: ./slides/34-section-multi-gpu-patterns.md
+src: ./slides/34-two-motives-for-multi-gpu.md
 ---
-<!-- Slide 34: Multi-GPU Patterns -->
+<!-- Slide 34: Two Motives for Multi-GPU -->
 
 ---
-src: ./slides/35-two-motives-for-multi-gpu.md
+src: ./slides/35-throughput-scaling-characteristics.md
 ---
-<!-- Slide 35: Two Motives for Multi-GPU -->
+<!-- Slide 35: Throughput Scaling Characteristics -->
 
 ---
-src: ./slides/36-throughput-scaling-characteristics.md
+src: ./slides/36-tensor-parallelism-splits-layers-horizontally.md
 ---
-<!-- Slide 36: Throughput Scaling Characteristics -->
+<!-- Slide 36: Tensor Parallelism Splits Layers Horizontally -->
 
 ---
-src: ./slides/37-tensor-parallelism-splits-layers-horizontally.md
+src: ./slides/37-pipeline-parallelism-splits-layers-vertically.md
 ---
-<!-- Slide 37: Tensor Parallelism Splits Layers Horizontally -->
+<!-- Slide 37: Pipeline Parallelism Splits Layers Vertically -->
 
 ---
-src: ./slides/38-pipeline-parallelism-splits-layers-vertically.md
+src: ./slides/38-tensor-vs-pipeline-parallelism-trade-offs.md
 ---
-<!-- Slide 38: Pipeline Parallelism Splits Layers Vertically -->
+<!-- Slide 38: Tensor vs Pipeline Parallelism Trade-offs -->
 
 ---
-src: ./slides/39-tensor-vs-pipeline-parallelism-trade-offs.md
+src: ./slides/39-gpus-on-kubernetes-unlocked.md
 ---
-<!-- Slide 39: Tensor vs Pipeline Parallelism Trade-offs -->
+<!-- Slide 39: GPUs on Kubernetes: Unlocked -->
 
 ---
 src: ./slides/40-five-strategies-maximize-gpu-utilization.md

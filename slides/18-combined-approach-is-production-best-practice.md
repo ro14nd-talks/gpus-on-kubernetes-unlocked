@@ -21,7 +21,7 @@ spec:
 
 </div>
 
-<div v-click="1" class="mt-4 grid grid-cols-2 gap-8">
+<div class="mt-4 grid grid-cols-2 gap-8">
 
 <div class="px-4 pt-3 pb-3 bg-purple-100 dark:bg-purple-900 rounded">
 

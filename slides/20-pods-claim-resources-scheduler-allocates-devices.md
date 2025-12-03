@@ -9,15 +9,15 @@ layout: default
 ### 🔄 Template-Based Flow
 
 <ol>
-<li v-click="1">Create ResourceClaimTemplate defining GPU requirements</li>
-<li v-click="2">Reference template in Pod spec</li>
+<li>Create ResourceClaimTemplate defining GPU requirements</li>
+<li>Reference template in Pod spec</li>
 </ol>
 
 </div>
 
 <div class="mt-6 grid grid-cols-2 gap-8">
 
-<div v-click="1">
+<div>
 
 ```yaml {lines:false}
 apiVersion: resource.k8s.io/v1beta1
@@ -34,7 +34,7 @@ spec:
 
 </div>
 
-<div v-click="2">
+<div>
 
 ```yaml {lines:false}
 kind: Pod
@@ -53,7 +53,7 @@ spec:
 
 </div>
 
-<div v-click="3" class="mt-4 px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
+<div v-click class="mt-4 px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
 
 - Scheduler allocates matching device automatically
 - Pattern mirrors PVC/PV binding
