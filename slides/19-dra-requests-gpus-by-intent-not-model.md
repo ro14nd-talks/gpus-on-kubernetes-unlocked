@@ -6,7 +6,7 @@ layout: default
 
 <div class="mt-6">
 
-<div class="px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-blue-200 dark:bg-blue-900 rounded">
 
 <div class="mb-2">
 

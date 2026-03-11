@@ -18,7 +18,7 @@ spec:
 
 <div class="mt-4 grid grid-cols-2 gap-8">
 
-<div class="px-4 pt-3 pb-3 bg-green-100 dark:bg-green-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-green-200 dark:bg-green-900 rounded">
 
 <div class="mb-2">
 
@@ -32,7 +32,7 @@ spec:
 
 </div>
 
-<div class="px-4 pt-3 pb-3 bg-red-100 dark:bg-red-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-red-200 dark:bg-red-900 rounded">
 
 <div class="mb-2">
 
@@ -48,7 +48,7 @@ spec:
 
 </div>
 
-<div v-click class="mt-4 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
+<div v-click class="mt-4 py-2 px-3 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold">
 
 **Best For:** Workloads tested on specific GPU model
 

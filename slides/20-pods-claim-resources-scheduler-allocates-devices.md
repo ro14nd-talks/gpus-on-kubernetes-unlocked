@@ -4,7 +4,7 @@ layout: default
 
 # Pods Claim Resources, Scheduler Allocates Devices
 
-<div class="px-4 pt-3 pb-3 bg-purple-100 dark:bg-purple-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-purple-200 dark:bg-purple-900 rounded">
 
 ### 🔄 Template-Based Flow
 
@@ -53,7 +53,7 @@ spec:
 
 </div>
 
-<div v-click class="mt-4 px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
+<div v-click class="mt-4 px-4 pt-3 pb-3 bg-blue-200 dark:bg-blue-900 rounded">
 
 - Scheduler allocates matching device automatically
 - Pattern mirrors PVC/PV binding

@@ -17,7 +17,7 @@ layout: default
 
 </div>
 
-<div class="mt-4 px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+<div class="mt-4 px-4 py-2 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 Trade isolation for flexibility - choose based on your workload requirements
 

@@ -45,7 +45,7 @@ layout: default
 
 </div>
 
-<div class="px-6 py-4 mt-4 bg-blue-100 dark:bg-blue-900 rounded text-center">
+<div class="px-6 py-4 mt-4 bg-blue-200 dark:bg-blue-900 rounded text-center">
 <p class="text-xl font-semibold">
 <strong>Best practice:</strong> Tensor parallelism within nodes + Pipeline across nodes for models exceeding single-server capacity
 </p>

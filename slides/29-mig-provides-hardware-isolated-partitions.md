@@ -1,6 +1,6 @@
 # NVIDIA MIG Provides Hardware-Isolated Partitions
 
-<div class="mt-3 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">
+<div class="mt-3 px-2 py-1 bg-gray-200 dark:bg-gray-800 rounded">
 
 **Fixed Profiles** (A100, H100, B100/B200 only) — Examples: 1g.5gb, 2g.10gb, 3g.20gb, 7g.40gb
 
@@ -8,7 +8,7 @@
 
 <div class="grid grid-cols-2 gap-6 mt-3">
 
-<div class="px-2 py-1 bg-cyan-100 dark:bg-cyan-900 rounded text-sm" style="line-height: 1.3;">
+<div class="px-2 py-1 bg-cyan-200 dark:bg-cyan-900 rounded text-sm" style="line-height: 1.3;">
 
 <div style="margin-bottom: 0.25rem; font-weight: 600;">Single Strategy</div>
 <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.4;">
@@ -18,7 +18,7 @@
 
 </div>
 
-<div class="px-2 py-1 bg-purple-100 dark:bg-purple-900 rounded text-sm" style="line-height: 1.3;">
+<div class="px-2 py-1 bg-purple-200 dark:bg-purple-900 rounded text-sm" style="line-height: 1.3;">
 
 <div style="margin-bottom: 0.25rem; font-weight: 600;">Mixed Strategy</div>
 <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.4;">

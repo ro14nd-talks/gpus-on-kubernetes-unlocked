@@ -31,7 +31,7 @@ spec:
 
 </div>
 
-<div class="p-4 bg-blue-100 dark:bg-blue-900 rounded" v-click>
+<div class="p-4 bg-blue-200 dark:bg-blue-900 rounded" v-click>
 
 ## Simple But Limited
 

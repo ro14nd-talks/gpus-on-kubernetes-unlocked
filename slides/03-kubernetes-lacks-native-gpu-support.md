@@ -6,7 +6,7 @@ layout: center
 
 <div class="grid grid-cols-2 gap-12 mt-12 px-8 items-stretch">
 
-<div class="border-3 border-green-500 rounded-lg p-8 bg-green-50 dark:bg-green-900/20 flex flex-col justify-between">
+<div class="border-3 border-green-500 rounded-lg p-8 bg-green-200 dark:bg-green-900/20 flex flex-col justify-between">
 
 <div class="text-2xl font-bold text-center mb-6 text-green-700 dark:text-green-400">
 Kubernetes Native
@@ -26,7 +26,7 @@ Kubernetes Native
 
 </div>
 
-<div class="border-3 border-orange-500 rounded-lg p-8 bg-orange-50 dark:bg-orange-900/20 flex flex-col justify-between">
+<div class="border-3 border-orange-500 rounded-lg p-8 bg-orange-200 dark:bg-orange-900/20 flex flex-col justify-between">
 
 <div class="text-2xl font-bold text-center mb-6 text-orange-700 dark:text-orange-400">
 LLM Requirements

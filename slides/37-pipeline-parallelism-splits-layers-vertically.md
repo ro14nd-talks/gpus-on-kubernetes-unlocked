@@ -10,7 +10,7 @@ layout: default
 
 <div class="grid grid-cols-1 gap-6">
 
-<div class="px-4 pt-3 pb-3 bg-orange-100 dark:bg-orange-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-orange-200 dark:bg-orange-900 rounded">
 
 <div class="mb-2">
 
@@ -24,7 +24,7 @@ layout: default
 
 </div>
 
-<div class="px-4 pt-3 pb-3 bg-orange-100 dark:bg-orange-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-orange-200 dark:bg-orange-900 rounded">
 
 <div class="mb-2">
 

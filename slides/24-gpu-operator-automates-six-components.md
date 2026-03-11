@@ -6,7 +6,7 @@ layout: default
 
 <div class="mt-6 grid gap-8" style="grid-template-columns: 65% 35%;">
 
-<div class="px-3 pt-2 pb-2 bg-green-100 dark:bg-green-900 rounded" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+<div class="px-3 pt-2 pb-2 bg-green-200 dark:bg-green-900 rounded" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
 
 <div class="mb-2">
 
@@ -59,7 +59,7 @@ spec:
 
 </div>
 
-<div class="mt-6 px-3 pt-2 pb-2 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+<div class="mt-6 px-3 pt-2 pb-2 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 **Change one YAML → operator reconfigures entire cluster**
 

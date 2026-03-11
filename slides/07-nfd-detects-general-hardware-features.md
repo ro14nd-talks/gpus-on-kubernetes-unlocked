@@ -27,7 +27,7 @@ feature.node.kubernetes.io/system-os_release.ID: "fedora"
 
 </div>
 
-<div v-click class="mt-4 p-4 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
+<div v-click class="mt-4 p-4 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold">
 
 Detects GPU **presence**, not model or memory
 

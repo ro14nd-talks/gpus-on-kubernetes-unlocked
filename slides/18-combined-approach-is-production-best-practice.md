@@ -23,7 +23,7 @@ spec:
 
 <div class="mt-4 grid grid-cols-2 gap-8">
 
-<div class="px-4 pt-3 pb-3 bg-purple-100 dark:bg-purple-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-purple-200 dark:bg-purple-900 rounded">
 
 <div class="mb-2">
 
@@ -38,7 +38,7 @@ spec:
 
 </div>
 
-<div class="px-4 pt-3 pb-3 bg-blue-100 dark:bg-blue-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-blue-200 dark:bg-blue-900 rounded">
 
 <div class="mb-2">
 

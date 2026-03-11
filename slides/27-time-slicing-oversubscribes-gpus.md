@@ -4,7 +4,7 @@
 
 <div>
 
-<div class="px-3 py-2 bg-blue-100 dark:bg-blue-900 rounded">
+<div class="px-3 py-2 bg-blue-200 dark:bg-blue-900 rounded">
 
 - 1 physical GPU → N virtual GPUs
 - Processes interleave (like CPU time-sharing)
@@ -41,7 +41,7 @@ devicePlugin:
 
 </div>
 
-<div class="mt-3 px-3 py-1 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+<div class="mt-3 px-3 py-1 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 Trade memory isolation for higher density — use for dev/test and bursty workloads
 

@@ -41,7 +41,7 @@ metadata:
 </div>
 </div>
 
-<div v-click class="mt-8 p-4 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
+<div v-click class="mt-8 p-4 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold">
 
 **The Solution:** Automatic hardware detection → Node labels
 

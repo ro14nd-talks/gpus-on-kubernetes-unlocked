@@ -1,6 +1,6 @@
 # NVIDIA GPU Sharing Maximizes Utilization
 
-<div class="mt-3 px-3 py-1 bg-red-100 dark:bg-red-900 rounded">
+<div class="mt-3 px-3 py-1 bg-red-200 dark:bg-red-900 rounded">
 
 **The Challenge:**
 - GPUs expensive, often <30% utilized
@@ -11,7 +11,7 @@
 
 <div class="grid grid-cols-2 gap-12 mt-3">
 
-<div class="px-2 py-1 bg-blue-100 dark:bg-blue-900 rounded">
+<div class="px-2 py-1 bg-blue-200 dark:bg-blue-900 rounded">
 
 **Time-Slicing**
 
@@ -23,7 +23,7 @@
 
 </div>
 
-<div class="px-2 py-1 bg-purple-100 dark:bg-purple-900 rounded">
+<div class="px-2 py-1 bg-purple-200 dark:bg-purple-900 rounded">
 
 **MIG (Multi-Instance GPU)**
 
@@ -37,7 +37,7 @@
 
 </div>
 
-<div class="mt-6 px-4 py-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+<div class="mt-6 px-4 py-3 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 Pick sharing strategy based on isolation needs and GPU model
 

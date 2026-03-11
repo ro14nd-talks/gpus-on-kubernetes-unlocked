@@ -6,7 +6,7 @@ layout: default
 
 <div class="grid grid-cols-2 gap-12 mt-6">
 
-<div class="px-3 py-2 bg-green-100 dark:bg-green-900 rounded">
+<div class="px-3 py-2 bg-green-200 dark:bg-green-900 rounded">
 
 ## 🌟 Good For
 
@@ -21,7 +21,7 @@ layout: default
 
 </div>
 
-<div class="px-3 py-2 bg-red-100 dark:bg-red-900 rounded">
+<div class="px-3 py-2 bg-red-200 dark:bg-red-900 rounded">
 
 ## ⛔ Limitations
 
@@ -38,7 +38,7 @@ layout: default
 
 </div>
 
-<div class="mt-4 px-4 py-2 bg-violet-100 dark:bg-violet-900 rounded">
+<div class="mt-4 px-4 py-2 bg-violet-200 dark:bg-violet-900 rounded">
 
 <ul style="list-style: none; padding-left: 0;">
 <li>⭐ Multi-tenant: 3 customers get 10GB slices - one crashes, others unaffected</li>
@@ -49,7 +49,7 @@ layout: default
 
 </div>
 
-<div class="mt-4 px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold" v-click>
+<div class="mt-4 px-4 py-2 bg-blue-200 dark:bg-blue-900 rounded text-center font-semibold" v-click>
 
 For flexible sharing → use time-slicing instead
 
