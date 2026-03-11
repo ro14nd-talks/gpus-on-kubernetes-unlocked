@@ -27,8 +27,8 @@ layout: default
 </tr>
 <tr>
 <td><strong>Bandwidth</strong></td>
-<td>Very high (600 GB/s NVLink)</td>
-<td>Network (12-25 GB/s, 24-50× slower)</td>
+<td>Very high (900 GB/s NVLink)</td>
+<td>Network (12-25 GB/s, 36-72× slower)</td>
 </tr>
 <tr>
 <td><strong>Latency</strong></td>
@@ -56,7 +56,7 @@ Quick comparison of the two model parallelism strategies:
 
 Tensor Parallelism (Single-Node):
 - Horizontal split: all GPUs work on same layer, different parts
-- Needs fast links (NVLink ~600 GB/s)
+- Needs fast links (NVLink ~900 GB/s on H100)
 - Lower latency due to parallel processing
 - Single-node friendly
 - Common: 2-8 GPUs within one server
@@ -72,9 +72,9 @@ Pipeline Parallelism (Multi-Node):
 
 Bandwidth hierarchy comparison:
 - Intra-GPU: 900 GB/s (memory bandwidth)
-- Intra-Node (NVLink): 600 GB/s → Tensor parallelism sweet spot
-- Inter-Node (Ethernet): 12.5 GB/s → 48× slower, pipeline tolerates this
-- Inter-Node (InfiniBand): 25 GB/s → 2× better than Ethernet, still 24× slower than NVLink
+- Intra-Node (NVLink): 900 GB/s → Tensor parallelism sweet spot
+- Inter-Node (Ethernet): 12.5 GB/s → 72× slower, pipeline tolerates this
+- Inter-Node (InfiniBand): 25 GB/s → 2× better than Ethernet, still 36× slower than NVLink
 
 Degree details (removed from main slide):
 - Tensor: 2-8 GPUs per server (limited by NVLink topology)

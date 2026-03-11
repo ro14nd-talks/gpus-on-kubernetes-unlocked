@@ -62,14 +62,22 @@ data:
 </div>
 
 <!--
-Multi-Instance GPU (MIG) is true hardware partitioning - not time-sharing.
+Multi-Instance GPU (MIG) is true hardware partitioning, not time-sharing.
 
-A100 can be split into up to 7 MIG instances. Each gets:
-- Fixed memory (5GB, 10GB, 20GB, 40GB profiles)
-- Dedicated compute cores
-- Separate fault domain
+MIG notation: The format is {compute_slices}g.{memory}gb.
+The "g" number refers to GPU compute slices (streaming multiprocessor groups).
+An A100-80GB has 7 compute slices and 80GB total, so:
+- 1g.10gb = 1/7 compute + 10GB memory (smallest useful partition)
+- 2g.20gb = 2/7 compute + 20GB memory (good for medium inference)
+- 3g.40gb = 3/7 compute + 40GB memory (larger models)
+- 7g.80gb = full GPU (no partitioning)
+The numbers must add up: 2x "2g.20gb" + 1x "3g.40gb" = 7 slices, 80GB total.
+Not all combinations are valid, NVIDIA defines fixed profiles per GPU model.
 
-One MIG instance crashes, others keep running.
+Each MIG instance gets:
+- Dedicated compute cores (not shared, not time-sliced)
+- Fixed memory with hardware enforcement (can't exceed allocation)
+- Separate fault domain (one instance crashes, others keep running)
 
 Strategies:
 - Single: All GPUs same MIG config (simple but inflexible)

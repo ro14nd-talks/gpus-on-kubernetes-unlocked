@@ -17,15 +17,18 @@ info: |
 mdc: true
 ---
 
-# GPUs on Kubernetes Unlocked
-
-## Understanding GPU scheduling and resource management
-
-<div class="mt-16">
-
-### Roland Huß
-#### Distinguished Engineer, Red Hat
-
+<div class="absolute inset-0 bg-[#EE0000] flex flex-col">
+  <div class="flex-1 flex flex-col justify-center px-20 text-white">
+    <h1 class="!text-5xl !text-white font-bold !border-none" style="font-family: 'Red Hat Display', sans-serif">GPUs on Kubernetes Unlocked</h1>
+    <h2 class="!text-2xl !text-white/90 mt-4 font-light !border-none">Understanding GPU scheduling and resource management</h2>
+    <div class="mt-16">
+      <p class="!text-xl !text-white/80 !m-0">Dr. Roland Huß</p>
+      <p class="!text-lg !text-white/60 !m-0">Distinguished Engineer, Red Hat</p>
+    </div>
+  </div>
+  <div class="h-16 bg-white flex items-center justify-end px-8">
+    <img src="/images/red-hat-logo.svg" class="h-8" alt="Red Hat" />
+  </div>
 </div>
 
 ---

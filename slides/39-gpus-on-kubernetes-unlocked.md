@@ -13,7 +13,7 @@ layout: default
 <div class="flex flex-col items-center justify-center gap-4 pb-20">
   <img src="/images/book-cover.png" class="w-full rounded shadow-lg" alt="Book Cover" />
   <img src="/images/book-qr.png" class="w-full" alt="QR Code" />
-  <a href="https://bit.ly/genaik8s-raw" target="_blank" class="font-mono text-xs text-center opacity-75 hover:opacity-100 transition no-underline break-all">bit.ly/genaik8s-raw</a>
+  <a href="https://bit.ly/genaik8s" target="_blank" class="font-mono text-xs text-center opacity-75 hover:opacity-100 transition no-underline break-all -mt-2">bit.ly/genaik8s</a>
 </div>
 
 </div>
@@ -54,7 +54,7 @@ VISUAL CUES:
 - Single summary equation emphasizes how pieces fit
 - Book reference for deeper dive into full GenAI stack
 
-This was Chapter 5 - one piece of the GenAI on Kubernetes puzzle. The book covers infrastructure, model serving, observability, security, cost management.
+This was Chapter 3, one piece of the GenAI on Kubernetes puzzle. The book covers infrastructure, model serving, observability, security, cost management.
 
 Timing: 120 seconds
 -->

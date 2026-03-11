@@ -19,7 +19,7 @@ layout: default
 </div>
 
 - Single server, all GPUs cooperate
-- NVLink: 600 GB/s (50× faster than network)
+- NVLink: 900 GB/s (70× faster than network)
 - All GPUs process same layer in parallel
 
 </div>
@@ -75,7 +75,7 @@ How it works:
 
 Architecture:
 - Single server with NVLink/NVSwitch interconnect
-- 600 GB/s bandwidth between GPUs (50× faster than network)
+- 900 GB/s bandwidth between GPUs (H100 NVLink 4.0, 72× faster than 100G Ethernet)
 - All-to-all connectivity: any GPU can talk to any other GPU
 - Intra-GPU memory bandwidth: 900 GB/s (even faster within a single GPU)
 

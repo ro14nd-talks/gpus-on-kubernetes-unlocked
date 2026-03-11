@@ -4,11 +4,11 @@ layout: default
 
 # Scheduling GPUs Is Only Half the Battle
 
-<div class="mt-12">
+<div class="mt-8 grid grid-cols-[45%_55%] gap-8">
 
 <div class="px-4 pt-3 pb-3 bg-green-100 dark:bg-green-900 rounded">
 
-<div class="mb-3">
+<div class="mb-2">
 
 ### 🌟 What We Have So Far
 
@@ -20,9 +20,9 @@ layout: default
 
 </div>
 
-<div class="mt-6 px-4 pt-3 pb-3 bg-red-100 dark:bg-red-900 rounded">
+<div class="px-4 pt-3 pb-3 bg-red-100 dark:bg-red-900 rounded">
 
-<div class="mb-3">
+<div class="mb-2">
 
 ### ⛔ What's Still Missing for Production
 
@@ -35,11 +35,11 @@ layout: default
 
 </div>
 
+<div v-click class="col-span-2 mt-4 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
+
+Manual SSH into nodes doesn't scale, we need declarative automation
+
 </div>
-
-<div v-click class="mt-12 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
-
-Manual SSH into nodes doesn't scale—we need declarative automation
 
 </div>
 

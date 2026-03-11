@@ -18,14 +18,15 @@ O'Reilly Media · March 2026
 </div>
 
 <div class="text-xl font-semibold text-primary mt-4">
-Chapter 5: GPU Scheduling on Kubernetes
+Chapter 3: GPU Scheduling on Kubernetes
 </div>
 
 <div class="flex items-center gap-6 mt-8">
 <img src="/images/book-qr.png" class="h-32" alt="QR Code" />
 <div class="text-sm flex flex-col gap-1">
-<div class="font-semibold">📖 Early Release: Raw & Unedited</div>
-<a href="https://bit.ly/genaik8s-raw" target="_blank" class="font-mono text-xs opacity-75 hover:opacity-100 transition no-underline">bit.ly/genaik8s-raw</a>
+<div class="font-semibold">Available from O'Reilly</div>
+<div class="text-xs opacity-75">Soon as free download from Red Hat</div>
+<a href="https://bit.ly/genaik8s" target="_blank" class="font-mono text-xs opacity-75 hover:opacity-100 transition no-underline">bit.ly/genaik8s</a>
 </div>
 </div>
 
@@ -38,13 +39,13 @@ Chapter 5: GPU Scheduling on Kubernetes
 </div>
 
 <!--
-This presentation is based on Chapter 5 of our O'Reilly book, Generative AI on Kubernetes.
+This presentation is based on Chapter 3 of our O'Reilly book, Generative AI on Kubernetes.
 
 Context:
 - Book provides comprehensive coverage of GenAI on K8s
 - This talk focuses specifically on GPU infrastructure
-- Chapter 5 covers discovery, allocation, orchestration, and deployment patterns
-- Book has 9 chapters covering entire GenAI stack
+- Chapter 3 covers discovery, allocation, orchestration, and deployment patterns
+- Book has 10 chapters covering entire GenAI stack
 
 Transition: "Let's start with the fundamental problem we're solving."
 

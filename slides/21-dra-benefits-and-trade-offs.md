@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# DRA Is Promising But Not Production-Ready
+# DRA Is Now Production-Ready
 
 <div class="mt-20 grid grid-cols-2 gap-8">
 
@@ -25,14 +25,14 @@ layout: default
 
 <div class="mb-2">
 
-### ⛔ Current Limitations
+### ⚠️ Considerations
 
 </div>
 
-- Beta API
-- Limited adoption
-- Experimental driver
-- Feature gate required
+- GA since K8s 1.34
+- Sub-features still maturing
+- Migration from device plugins
+- Ecosystem catching up
 
 </div>
 
@@ -40,7 +40,7 @@ layout: default
 
 <div v-click class="mt-12 py-2 px-3 bg-blue-100 dark:bg-blue-900 rounded text-center font-semibold">
 
-Wait for production, but start learning now
+Evaluate migrating from device plugins to DRA
 
 </div>
 
@@ -53,22 +53,17 @@ Example use cases for DRA:
 - Device sharing policies
 - Composable multi-device requests
 
-Current status and limitations:
-- Beta in Kubernetes 1.33 (disabled by default, requires feature gate)
-- API still evolving, may change
-- NVIDIA DRA driver experimental
-- Few production users, limited ecosystem adoption
-- Cluster autoscalers don't fully understand DRA claims yet
+Current status (as of March 2026):
+- GA since Kubernetes 1.34 (stable, enabled by default)
+- Stable API: resource.k8s.io/v1
+- Beta features: admin access controls, prioritized lists
+- Alpha features: extended resource allocation, device taints/tolerations
+- Cloud providers actively integrating (GKE, AKS)
+- NVIDIA, AMD, Intel shipping DRA drivers
 
-Future direction:
-- DRA is Kubernetes' intended replacement for device plugins
-- Will become the standard mechanism for extended resources
-- Vendors (NVIDIA, AMD, Intel) actively developing DRA drivers
-- Moving toward production readiness
+DRA is Kubernetes' intended replacement for device plugins and the standard mechanism for device allocation going forward.
 
-Recommendation: Use traditional scheduling (resource requests + labels) for production today, but start learning DRA now.
-
-When it stabilizes, DRA will replace much manual labeling and selection logic with intent-based requests.
+Recommendation: DRA is production-ready. Evaluate migration from device plugins + labels to intent-based DRA claims.
 
 Timing: 90 seconds
 -->

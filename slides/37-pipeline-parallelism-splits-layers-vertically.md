@@ -19,7 +19,7 @@ layout: default
 </div>
 
 - Model layers distributed across multiple nodes
-- Network: 12-25 GB/s (24-50× slower than NVLink)
+- Network: 12-25 GB/s (36-72× slower than NVLink)
 - Sequential processing with micro-batching
 
 </div>
@@ -77,7 +77,7 @@ Architecture:
 - Multiple nodes connected via network (Ethernet or InfiniBand)
 - 100 Gbit Ethernet = 12.5 GB/s bandwidth
 - InfiniBand HDR = 25 GB/s (2× faster than Ethernet)
-- Still 24-50× slower than NVLink (600 GB/s within server vs 12-25 GB/s between servers)
+- Still 36-72× slower than NVLink (900 GB/s within server vs 12-25 GB/s between servers)
 - PCIe 4.0 x16: 32 GB/s for CPU-GPU communication within node
 
 Why it works despite slower network:
